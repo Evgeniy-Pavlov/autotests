@@ -1,4 +1,4 @@
-from rectangle import Rectangle
+from .rectangle import Rectangle
 
 class Square(Rectangle):
 
@@ -8,8 +8,8 @@ class Square(Rectangle):
 
     @property
     def area(self):
-        return a ** 2
+        return self.a ** 2
 
     @property
     def perimeter(self):
-        return a * 4
+        return self.a * 4
