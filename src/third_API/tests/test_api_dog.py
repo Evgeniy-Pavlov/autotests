@@ -32,4 +32,4 @@ def test_breeds_image_random_multiple_valid_num(base_url, pattern_url_dogs, num)
     assert isinstance(result['message'], list)
     assert result['status'] == 'success'
     assert len(result['message']) == num
-    assert len([x for x in result['message'] if re.match(pattern_url_dogs, x)]) == num
+    assert len([x for x in result['message'] if not re.match(pattern_url_dogs, x)]) == 0

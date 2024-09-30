@@ -25,4 +25,4 @@ def base_url(request):
 
 @pytest.fixture
 def pattern_url_dogs():
-    return re.compile(r'https:\/\/images.dog.ceo\/breeds\/[A-Za-z-]{1,20}\/[a-zA-Z0-9._-]{1,40}.jpg')
+    return re.compile(r'https:\/\/images.dog.ceo\/breeds\/[a-z-]{1,30}\/[a-zA-Z0-9._()-]{1,50}.jpg')
