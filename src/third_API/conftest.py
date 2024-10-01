@@ -24,5 +24,9 @@ def base_url(request):
     return request.config.getoption('--url')
 
 @pytest.fixture
+def status_code(request):
+    return request.config.getoption('--status_code')
+
+@pytest.fixture
 def pattern_url_dogs():
-    return re.compile(r'https:\/\/images.dog.ceo\/breeds\/[a-z-]{1,30}\/[a-zA-Z0-9._()-]{1,50}.jpg')
+    return re.compile(r'https:\/\/images.dog.ceo\/breeds\/[a-z-]{1,30}\/[a-zA-Z0-9~._()-]{1,50}.jpg')
