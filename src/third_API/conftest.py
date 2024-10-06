@@ -29,4 +29,15 @@ def status_code(request):
 
 @pytest.fixture
 def pattern_url_dogs():
-    return re.compile(r'https:\/\/images.dog.ceo\/breeds\/[a-z-]{1,30}\/[a-zA-Z0-9~._()-]{1,50}.jpg')
+    return re.compile(r'https:\/\/images.dog.ceo\/breeds\/[a-z-]{1,30}\/[a-zA-Z0-9~.,_()-]{1,60}.jpg')
+
+
+def pytest_generate_tests(metafunc):
+    if 'breed' in metafunc.fixturenames:
+        url = metafunc.config.getoption('--url')
+        metafunc.parametrize('breed', [x if x != 'pinscher' else pytest.param(x, 
+                            marks=pytest.mark.xfail(reason='For the pinscher breed, returns\
+                            the MD file in the message list. For example https://images.dog.ceo/breeds/pinscher/README.MD')) 
+                            for x in requests.get(f'{url}/api/breeds/list/all').json()['message'].keys()])
+
+

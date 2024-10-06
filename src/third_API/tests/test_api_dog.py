@@ -3,6 +3,7 @@ import pytest
 import requests
 
 
+
 @pytest.mark.dogsapi
 def test_breeds_list_all(base_url, status_code):
     response = requests.get(f'{base_url}/api/breeds/list/all')
@@ -46,3 +47,16 @@ def test_breeds_image_random_multiple_invalid_num(base_url, status_code, num):
     result = response.json()
     assert result['status'] == 'error'
     assert isinstance(result['message'], list)
+
+
+
+@pytest.mark.dogsapi
+@pytest.mark.dogsmultiple
+def test_by_breed_images(base_url, status_code, breed, pattern_url_dogs):
+    response = requests.get(f'{base_url}/api/breed/{breed}/images')
+    assert response.status_code == status_code
+    result = response.json()
+    assert result['status'] == 'success'
+    assert isinstance(result['message'], list)
+    assert len([x for x in result['message'] if breed in x]) == len(result['message'])
+    assert len([x for x in result['message'] if not re.match(pattern_url_dogs, x)]) == 0
