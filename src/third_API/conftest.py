@@ -33,11 +33,20 @@ def pattern_url_dogs():
 
 
 def pytest_generate_tests(metafunc):
+    url = metafunc.config.getoption('--url')
     if 'breed' in metafunc.fixturenames:
-        url = metafunc.config.getoption('--url')
         metafunc.parametrize('breed', [x if x != 'pinscher' else pytest.param(x, 
                             marks=pytest.mark.xfail(reason='For the pinscher breed, returns\
                             the MD file in the message list. For example https://images.dog.ceo/breeds/pinscher/README.MD')) 
                             for x in requests.get(f'{url}/api/breeds/list/all').json()['message'].keys()])
+    if 'sub_breed' in metafunc.fixturenames:
+        metafunc.parametrize('sub_breed', [{'key': key, 'value': value, 'len': len(value)} for key, value in requests.get(f'{url}/api/breeds/list/all').json()['message'].items() if value])
+    if 'sub_breed_img' in metafunc.fixturenames:
+        lst_breeds = [(key,value) for key, value in requests.get(f'{url}/api/breeds/list/all').json()['message'].items() if value]
+        result = []
+        for key, value in lst_breeds:
+            for sub_breed in value:
+                result.append((key, sub_breed))
+        metafunc.parametrize('sub_breed_img', result)
 
 
