@@ -12,4 +12,4 @@ def test_list_breweries(base_url, status_code, num):
     assert len(result) == num
     for i in result:
         assert isinstance(i, dict)
-        assert Brewer(i)
+        assert Brewer.model_validate(i)
