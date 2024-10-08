@@ -33,23 +33,30 @@ def pattern_url_dogs():
 
 
 def pytest_generate_tests(metafunc):
-    
+    url = metafunc.config.getoption('--url')
     if 'breed' in metafunc.fixturenames:
-        url = metafunc.config.getoption('--url')
         metafunc.parametrize('breed', [x if x != 'pinscher' else pytest.param(x, 
                             marks=pytest.mark.xfail(reason='For the pinscher breed, returns\
                             the MD file in the message list. For example https://images.dog.ceo/breeds/pinscher/README.MD')) 
                             for x in requests.get(f'{url}/api/breeds/list/all').json()['message'].keys()])
     if 'sub_breed' in metafunc.fixturenames:
-        url = metafunc.config.getoption('--url')
         metafunc.parametrize('sub_breed', [{'key': key, 'value': value, 'len': len(value)} for key, value in requests.get(f'{url}/api/breeds/list/all').json()['message'].items() if value])
     if 'sub_breed_img' in metafunc.fixturenames:
-        url = metafunc.config.getoption('--url')
         lst_breeds = [(key,value) for key, value in requests.get(f'{url}/api/breeds/list/all').json()['message'].items() if value]
         result = []
         for key, value in lst_breeds:
             for sub_breed in value:
                 result.append((key, sub_breed))
         metafunc.parametrize('sub_breed_img', result)
+    if 'brewery_id' in metafunc.fixturenames:
+        metafunc.parametrize('brewery_id', [x['id'] for x in requests.get(f'{url}/v1/breweries?per_page=10').json()]) 
+    if 'brewery_city' in metafunc.fixturenames:
+        metafunc.parametrize('brewery_city', sorted(list(set([x['city'] for x in requests.get(f'{url}/v1/breweries?per_page=40').json() if x['city']])))) 
+    if 'brewery_country' in metafunc.fixturenames:
+        metafunc.parametrize('brewery_country', sorted(list(set([x['country'] for x in requests.get(f'{url}/v1/breweries?per_page=40').json() if x['country']])))) 
+    if 'brewery_ids' in metafunc.fixturenames:
+        lst_breweries = [x['id'] for x in requests.get(f'{url}/v1/breweries?per_page=10').json()]
+        metafunc.parametrize('brewery_ids', [lst_breweries[x-3:x] for x in range(3, len(lst_breweries), 3)]) 
+
 
 
