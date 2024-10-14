@@ -2,3 +2,5 @@ pytest==8.2.1
 requests==2.32.3
 pytest-xdist==3.6.1
 pydantic==2.9.2
+dnspython==2.7.0 
+email-validator==2.2.0

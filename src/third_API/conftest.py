@@ -31,6 +31,10 @@ def status_code(request):
 def pattern_url_dogs():
     return re.compile(r'https:\/\/images.dog.ceo\/breeds\/[a-z-]{1,30}\/[a-zA-Z0-9~.,_()-]{1,60}.jpg')
 
+@pytest.fixture
+def pattern_url_jsonplaceholder():
+    return re.compile(r'https:\/\/via.placeholder.com\/[0-9]{1,3}\/[a-z0-9]{1,6}')
+
 
 def pytest_generate_tests(metafunc):
     url = metafunc.config.getoption('--url')
@@ -57,6 +61,5 @@ def pytest_generate_tests(metafunc):
     if 'brewery_ids' in metafunc.fixturenames:
         lst_breweries = [x['id'] for x in requests.get(f'{url}/v1/breweries?per_page=10').json()]
         metafunc.parametrize('brewery_ids', [lst_breweries[x-3:x] for x in range(3, len(lst_breweries), 3)]) 
-
-
-
+    if 'post_id' in metafunc.fixturenames:
+        metafunc.parametrize('post_id', [int(x['id']) for x in requests.get(f'{url}/posts').json()])

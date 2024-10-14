@@ -1,6 +1,6 @@
 from uuid import UUID, uuid4
 from typing import Optional, Union
-from pydantic import BaseModel, Field, AnyHttpUrl
+from pydantic import BaseModel, Field, AnyHttpUrl, EmailStr
 
 class Brewery(BaseModel):
     id: UUID
@@ -20,7 +20,74 @@ class Brewery(BaseModel):
     state: Union[str, None] = None
     street: Union[str, None] = None
 
+
 class Brewery_meta(BaseModel):
     total: int
     page: int
     per_page: int
+
+
+class Post(BaseModel):
+    userId: int
+    id: int
+    title: str
+    body: str
+
+
+class Comment(BaseModel):
+    postId: int
+    id: int
+    name: str
+    email: Union[EmailStr, None] = None
+    body: str
+
+
+class Album(BaseModel):
+    userId: int
+    id: int
+    title: str
+
+
+class Photo(BaseModel):
+    albumId: int
+    id: int
+    title: str
+    url: Union[AnyHttpUrl, None] = None
+    thumbnailUrl: Union[AnyHttpUrl, None] = None
+
+
+class Todo(BaseModel):
+    userId: int
+    id: int
+    title: str
+    completed: bool
+
+
+class Geo(BaseModel):
+    lat: float
+    lng: float
+
+
+class Address(BaseModel):
+    street: str
+    suite: str
+    city: str
+    zipcode: str
+    geo: Geo
+
+
+class Company(BaseModel):
+    name: str
+    catchPhrase: str
+    bs: str
+
+
+class User(BaseModel):
+    id: int
+    name: str
+    username: str
+    email: EmailStr
+    address: Address
+    phone: str
+    website: str
+    company: Company
