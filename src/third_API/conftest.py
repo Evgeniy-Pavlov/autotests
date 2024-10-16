@@ -63,3 +63,6 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize('brewery_ids', [lst_breweries[x-3:x] for x in range(3, len(lst_breweries), 3)]) 
     if 'post_id' in metafunc.fixturenames:
         metafunc.parametrize('post_id', [int(x['id']) for x in requests.get(f'{url}/posts').json()])
+    if 'post_data' in metafunc.fixturenames:
+        data_list = [{'title': f'test_{num}', 'body': f'body_{num}', 'userId': 1} for num in range(1,5)]
+        metafunc.parametrize('post_data', [requests.post(url=f'{url}/posts', data=data).json() for data in data_list])
