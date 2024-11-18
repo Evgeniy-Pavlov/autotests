@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 from src.fourth_opencart.find_elements import title_wait, wait_visibility_element, wait_invisibility_element
-import time
 
 
 def test_base_page(browser, base_url):
@@ -37,4 +36,37 @@ def test_base_page(browser, base_url):
     assert li_login.get_attribute('href') == f'{base_url}/en-gb?route=account/login'
 
 
+def test_catalog(browser, base_url):
+    browser.get(f'{base_url}/en-gb/catalog/desktops')
+    assert wait_visibility_element('aside#column-left', browser)
+    list_categories = browser.find_elements(By.CSS_SELECTOR, 'a.list-group-item')
+    assert len(list_categories) == 10
+    assert wait_visibility_element('div.btn-group', browser)
+    assert wait_visibility_element('button#button-list', browser)
+    btn_list = browser.find_element(By.CSS_SELECTOR, 'button#button-list')
+    assert wait_visibility_element('button#button-grid', browser)
+    btn_grid = browser.find_element(By.CSS_SELECTOR, 'button#button-grid')
+    assert btn_list.get_attribute('class') == 'btn btn-light'
+    assert btn_grid.get_attribute('class') == 'btn btn-light active'
+    assert wait_visibility_element('div#product-list', browser)
+
+
+def test_card_of_product(browser, base_url):
+    browser.get(f'{base_url}/en-gb/product/desktops/apple-cinema')
+    assert wait_visibility_element('ul.breadcrumb', browser)
+    list_breadcrum = browser.find_elements(By.CSS_SELECTOR, 'li.breadcrumb-item > a')
+    assert len(list_breadcrum) == 3
+    lst_urls = ['/en-gb?route=common/home', '/en-gb/catalog/desktops', '/en-gb/product/desktops/apple-cinema']
+    for elem, url in zip(list_breadcrum, lst_urls):
+        assert elem.get_attribute('href') == f'{base_url}{url}'
+    assert wait_visibility_element('div.magnific-popup', browser)
+    assert wait_visibility_element('#content > div.row.mb-3 > div:nth-child(2)', browser)
+    assert wait_visibility_element('div.btn-group', browser)
+    assert wait_visibility_element('form#form-product', browser)
+    list_required_fields = browser.find_elements(By.CSS_SELECTOR, '#form-product > div > div.required')
+    assert len(list_required_fields) == 9
+
+
+def test_page_login_administation(browser, base_url):
+    browser.get(f'{base_url}/administration')
 
