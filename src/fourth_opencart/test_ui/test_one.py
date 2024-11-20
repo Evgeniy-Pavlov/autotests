@@ -26,12 +26,16 @@ def test_base_page(browser, base_url):
     dropdown_my_account = browser.find_element(
         By.CSS_SELECTOR, '#top > div > div.nav.float-end > ul > li:nth-child(2)')
     dropdown_my_account.click()
-    wait_visibility_element('#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(1) > a', browser, 2)
-    li_register = browser.find_element(By.CSS_SELECTOR, '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(1) > a')
+    wait_visibility_element(
+        '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(1) > a', browser, 2)
+    li_register = browser.find_element(
+        By.CSS_SELECTOR, '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(1) > a')
     assert li_register.text == 'Register'
     assert li_register.get_attribute('href') == f'{base_url}/en-gb?route=account/register'
-    wait_visibility_element('#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(2) > a', browser)
-    li_login = browser.find_element(By.CSS_SELECTOR, '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(2) > a')
+    wait_visibility_element(
+        '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(2) > a', browser)
+    li_login = browser.find_element(
+        By.CSS_SELECTOR, '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(2) > a')
     assert li_login.text == 'Login'
     assert li_login.get_attribute('href') == f'{base_url}/en-gb?route=account/login'
 
@@ -69,4 +73,52 @@ def test_card_of_product(browser, base_url):
 
 def test_page_login_administation(browser, base_url):
     browser.get(f'{base_url}/administration')
+    assert wait_visibility_element('header#header > div.container-fluid > a.navbar-brand > img', browser)
+    logo = browser.find_element(By.CSS_SELECTOR, 'header#header > div.container-fluid > a.navbar-brand > img')
+    assert logo.get_attribute('src') == f'{base_url}/administration/view/image/logo.png'
+    assert logo.get_attribute('title') == 'OpenCart'
+    assert wait_visibility_element('div.card-header > i.fa-solid', browser)
+    div_header_form = browser.find_element(By.CSS_SELECTOR, 'div.card-header')
+    assert div_header_form.text == 'Please enter your login details.'
+    label_login_input = browser.find_element(By.CSS_SELECTOR, '#form-login > div:nth-child(1) > label')
+    assert label_login_input.text == 'Username'
+    label_password_input = browser.find_element(By.CSS_SELECTOR, '#form-login > div:nth-child(2) > label')
+    assert label_password_input.text == 'Password'
+    input_login = browser.find_element(By.CSS_SELECTOR, 'input#input-username')
+    input_password = browser.find_element(By.CSS_SELECTOR, 'input#input-password')
+    assert input_login.get_attribute('placeholder') == 'Username'
+    assert input_password.get_attribute('placeholder') == 'Password'
+    assert input_login.get_attribute('type') == 'text'
+    assert input_password.get_attribute('type') == 'password'
 
+
+def test_registration_page(browser, base_url):
+    browser.get(f'{base_url}/index.php?route=account/register')
+    assert wait_visibility_element('div#content > h1', browser)
+    header_form = browser.find_element(By.CSS_SELECTOR, 'div#content > h1')
+    assert header_form.text == 'Register Account'
+    required_fields = browser.find_elements(By.CSS_SELECTOR, 'div.required')
+    assert len(required_fields) == 4
+    first_name_label = browser.find_element(By.CSS_SELECTOR, '#account > div:nth-child(2) > label.col-form-label')
+    assert first_name_label.text == 'First Name'
+    first_name_field = browser.find_element(By.CSS_SELECTOR, '#input-firstname')
+    assert first_name_field.get_attribute('placeholder') == 'First Name'
+    assert first_name_field.get_attribute('type') == 'text'
+    last_name_label = browser.find_element(By.CSS_SELECTOR, '#account > div:nth-child(3) > label.col-form-label')
+    assert last_name_label.text == 'Last Name'
+    last_name_field = browser.find_element(By.CSS_SELECTOR, '#input-lastname')
+    assert last_name_field.get_attribute('placeholder') == 'Last Name'
+    assert last_name_field.get_attribute('type') == 'text'
+    email_label = browser.find_element(By.CSS_SELECTOR, '#account > div:nth-child(4) > label.col-form-label')
+    assert email_label.text == 'E-Mail'
+    email_field = browser.find_element(By.CSS_SELECTOR, '#input-email')
+    assert email_field.get_attribute('placeholder') == 'E-Mail'
+    assert email_field.get_attribute('type') == 'email'
+    password_label = browser.find_element(
+        By.CSS_SELECTOR, '#form-register > fieldset:nth-child(2) > div > label.col-form-label')
+    assert password_label.text == 'Password'
+    password_field = browser.find_element(By.CSS_SELECTOR, '#input-password')
+    assert password_field.get_attribute('placeholder') == 'Password'
+    assert password_field.get_attribute('type') == 'password'
+    btn_form = browser.find_element(By.CSS_SELECTOR, '#form-register > div > button.btn-primary')
+    assert btn_form.get_attribute('type') == 'submit'
