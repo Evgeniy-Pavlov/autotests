@@ -23,6 +23,7 @@ def browser(request):
     headless = request.config.getoption('--headless')
     maximized = request.config.getoption('--maximized')
     options = Chrome_Options() if browser_arg == 'chrome' else Firefox_Options()
+    options.page_load_strategy = 'none'
     if headless:
         options.add_argument('--headless=new')
     if browser_arg == 'chrome':
