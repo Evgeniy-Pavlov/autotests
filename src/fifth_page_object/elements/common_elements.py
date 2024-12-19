@@ -6,7 +6,7 @@ from src.fifth_page_object.elements.base_class import Base_class_page
 
 class Common_elements(Base_class_page):
     PAGE_TITLE_TEXT = 'Your Store'
-    DROPDOWN_CURRENCY = (By.CSS_SELECTOR, 'form#form-currency > div.dropdown > a.dropdown-toogle')
+    DROPDOWN_CURRENCY = (By.CSS_SELECTOR, 'form#form-currency')
     CURRENCIES = (By.CSS_SELECTOR, 'form#form-currency > div.dropdown > ul.dropdown-menu > li > a.dropdown-item')
     INLINE_ITEMS = (By.CSS_SELECTOR, 'div.float-end > ul.list-inline > li.list-inline-item')
     ITEMS_LOGIN_REGISTER = (By.CSS_SELECTOR, 'ul.dropdown-menu-right > li > a.dropdown-item')

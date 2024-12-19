@@ -3,8 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as Chrome_Options
 from selenium.webdriver.firefox.options import Options as Firefox_Options
 import mariadb
-from helpers import read_conn_params
-
+from helpers import read_conn_params, get_token_admin
+import requests
 
 
 def pytest_addoption(parser):
@@ -30,16 +30,24 @@ def set_currencies(request):
     connection = mariadb.connect(**conn_params)
     cursor = connection.cursor()
     cursor.execute(query)
-    result_сurrencies = [x[0] for x in cursor.fetchall()]
+    result_currencies = [x[0] for x in cursor.fetchall()]
     query_update = f'update oc_currency set status = 1 where code in {tuple(request.config.getoption("--currencies"))}'
     cursor.execute(query_update)
+    base_url = request.config.getoption('--url')
+    token = get_token_admin(base_url)
+    requests.post(f'{base_url}/administration/index.php?route=localisation/currency.refresh&user_token={token}')
+    requests.get(f'{base_url}/administration/index.php?route=localisation/currency.list&user_token={token}')
+
     def final():
-        query_return = f'update oc_currency set status = 1 where code in {tuple([x[0] for x in result_сurrencies])}'
+        query_return = f'update oc_currency set status = 1 where code in {tuple([x[0] for x in result_currencies])}'
         cursor.execute(query_return)
         cursor.execute(
-            f'update oc_currency set status = 0 where code not in {tuple([x[0] for x in result_сurrencies])}')
+            f'update oc_currency set status = 0 where code not in {tuple([x[0] for x in result_currencies])}')
         cursor.close()
         connection.close()
+        requests.post(f'{base_url}/administration/index.php?route=localisation/currency.refresh&user_token={token}')
+        requests.get(f'{base_url}/administration/index.php?route=localisation/currency.list&user_token={token}')
+
     request.addfinalizer(final)
     return request.config.getoption("--currencies")
 
@@ -66,3 +74,14 @@ def browser(request):
 
     request.addfinalizer(final)
     return driver
+
+
+def pytest_generate_tests(metafunc):
+    if 'curns' in metafunc.fixturenames:
+        query = 'select code, case when symbol_left = "" then symbol_right else symbol_left\
+         end as symbol from oc_currency oc  where code in ("GBP", "USD", "RUB")'
+        conn_params = read_conn_params(metafunc.config.getoption('--conn_params'))
+        connection = mariadb.connect(**conn_params)
+        cursor = connection.cursor()
+        cursor.execute(query)
+        metafunc.parametrize('curns', [x for x in cursor.fetchall()])
