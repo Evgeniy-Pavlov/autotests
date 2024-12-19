@@ -27,7 +27,7 @@ class Base_class_page:
 
     def title_wait(self, title, timeout=1):
         try:
-            WebDriverWait(self.browser, timeout).until((EC.title_is(title)))
+            return WebDriverWait(self.browser, timeout).until((EC.title_is(title)))
         except TimeoutException as err:
             raise AssertionError(err)
 
