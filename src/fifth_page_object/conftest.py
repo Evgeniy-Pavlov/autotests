@@ -15,7 +15,7 @@ def pytest_addoption(parser):
     parser.addoption('--browser', action='store', default='chrome', choices=['chrome', 'firefox'])
     parser.addoption('--conn_params', action='store', default='conn_params.json', help='This is path db connection\
     parameters')
-    parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR", "RUB"])
+    parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR"])
 
 
 @pytest.fixture
@@ -30,19 +30,21 @@ def set_currencies(request):
     connection = mariadb.connect(**conn_params)
     cursor = connection.cursor()
     cursor.execute(query)
-    result_currencies = [x[0] for x in cursor.fetchall()]
+    result_currencies = tuple([x[0] for x in cursor.fetchall()])
     query_update = f'update oc_currency set status = 1 where code in {tuple(request.config.getoption("--currencies"))}'
     cursor.execute(query_update)
+    connection.commit()
     base_url = request.config.getoption('--url')
     token = get_token_admin(base_url)
     requests.post(f'{base_url}/administration/index.php?route=localisation/currency.refresh&user_token={token}')
     requests.get(f'{base_url}/administration/index.php?route=localisation/currency.list&user_token={token}')
 
     def final():
-        query_return = f'update oc_currency set status = 1 where code in {tuple([x[0] for x in result_currencies])}'
-        cursor.execute(query_return)
+        cursor.execute(f'update oc_currency set status = 1 where code in {result_currencies}')
+        connection.commit()
         cursor.execute(
-            f'update oc_currency set status = 0 where code not in {tuple([x[0] for x in result_currencies])}')
+            f'update oc_currency set status = 0 where code not in {result_currencies}')
+        connection.commit()
         cursor.close()
         connection.close()
         requests.post(f'{base_url}/administration/index.php?route=localisation/currency.refresh&user_token={token}')
@@ -84,4 +86,18 @@ def pytest_generate_tests(metafunc):
         connection = mariadb.connect(**conn_params)
         cursor = connection.cursor()
         cursor.execute(query)
-        metafunc.parametrize('curns', [x for x in cursor.fetchall()])
+        result = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        metafunc.parametrize('curns', [x for x in result])
+    if 'paths' in metafunc.fixturenames:
+        conn_params = read_conn_params(metafunc.config.getoption('--conn_params'))
+        connection = mariadb.connect(**conn_params)
+        cursor = connection.cursor()
+        query = 'select ocd.name from oc_category\
+         oc join oc_category_description ocd on oc.category_id = ocd.category_id  where `column` = 1'
+        cursor.execute(query)
+        categories = [f'/catalog/{(x[0]).lower()}' for x in cursor.fetchall()]
+        cursor.close()
+        connection.close()
+        metafunc.parametrize('paths', ['/home', '/catalog/smartphone', '/catalog/desktops', '/catalog/laptop-notebook'])

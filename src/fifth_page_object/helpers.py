@@ -10,6 +10,5 @@ def get_token_admin(base_url):
     with open('admin_cred.json', 'r') as f:
         data = json.load(f)
     session = requests.Session()
-    result = session.post(f'{base_url}/index.php?route=api/login', data=data).text
-    return result
+    return session.post(f'{base_url}/api/login', data=data).cookies["OCSESSID"]
 

@@ -26,3 +26,7 @@ class Common_elements(Base_class_page):
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)
         self.path = '/home'
+
+    def change_path(self, path):
+        self.path = path
+        return self
