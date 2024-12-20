@@ -8,6 +8,7 @@ class Common_elements(Base_class_page):
     PAGE_TITLE_TEXT = 'Your Store'
     DROPDOWN_CURRENCY = (By.CSS_SELECTOR, 'form#form-currency')
     CURRENCIES = (By.CSS_SELECTOR, 'form#form-currency > div.dropdown > ul.dropdown-menu > li > a.dropdown-item')
+    PHONE_NUMBER = (By.CSS_SELECTOR, '#top > div > div.nav.float-end > ul > li:nth-child(1) > span')
     INLINE_ITEMS = (By.CSS_SELECTOR, 'div.float-end > ul.list-inline > li.list-inline-item')
     ITEMS_LOGIN_REGISTER = (By.CSS_SELECTOR, 'ul.dropdown-menu-right > li > a.dropdown-item')
     WISHLIST_URL = (By.CSS_SELECTOR, 'a#wishlist-total')

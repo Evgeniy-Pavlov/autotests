@@ -16,11 +16,16 @@ def pytest_addoption(parser):
     parser.addoption('--conn_params', action='store', default='conn_params.json', help='This is path db connection\
     parameters')
     parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR"])
+    parser.addoption('--phone', action='store', default='123456789')
 
 
 @pytest.fixture
 def base_url(request):
     return request.config.getoption('--url')
+
+@pytest.fixture
+def get_phone(request):
+    return request.config.getoption('--phone')
 
 
 @pytest.fixture(scope='session')
@@ -52,6 +57,24 @@ def set_currencies(request):
 
     request.addfinalizer(final)
     return request.config.getoption("--currencies")
+
+
+@pytest.fixture(scope='session')
+def set_phone(request):
+    phone = request.config.getoption('--phone')
+    query_update = f'update oc_setting set value = {phone} where key = config_telephone'
+    conn_params = read_conn_params(request.config.getoption('--conn_params'))
+    connection = mariadb.connect(**conn_params)
+    cursor = connection.cursor()
+    cursor.execute(query_update)
+    connection.commit()
+
+    def final():
+        cursor.close()
+        connection.close()
+
+    request.addfinalizer(final)
+    return phone
 
 
 @pytest.fixture
@@ -101,3 +124,4 @@ def pytest_generate_tests(metafunc):
         cursor.close()
         connection.close()
         metafunc.parametrize('paths', ['/home', '/catalog/smartphone', '/catalog/desktops', '/catalog/laptop-notebook'])
+

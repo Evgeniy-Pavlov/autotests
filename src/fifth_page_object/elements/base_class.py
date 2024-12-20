@@ -37,3 +37,6 @@ class Base_class_page:
     def find_some_elem(self, elem):
         return self.browser.find_elements(*elem)
 
+    def find_one_elem(self, elem):
+        return self.browser.find_element(*elem)
+
