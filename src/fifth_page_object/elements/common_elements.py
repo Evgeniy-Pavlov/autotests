@@ -13,6 +13,7 @@ class Common_elements(Base_class_page):
     ITEMS_LOGIN_REGISTER = (By.CSS_SELECTOR, 'ul.dropdown-menu-right > li > a.dropdown-item')
     WISHLIST_URL = (By.CSS_SELECTOR, 'a#wishlist-total')
     WISHLIST_COUNT = (By.CSS_SELECTOR, 'a#wishlist-total > span.d-none')
+    SHOPPING_CART = (By.CSS_SELECTOR, 'ul > li:nth-child(4)')
     SHOPPING_CART_URL = (By.CSS_SELECTOR, 'ul > li:nth-child(4) > a')
     SHOPPING_CART_TEXT = (By.CSS_SELECTOR, 'ul > li:nth-child(4) > a > span.d-none')
     CHECKOUT_URL = (By.CSS_SELECTOR, 'ul > li:nth-child(5) > a')
@@ -21,7 +22,7 @@ class Common_elements(Base_class_page):
     LOGO = (By.CSS_SELECTOR, 'div#logo > a > img.img-fluid')
     SEARCH = (By.CSS_SELECTOR, 'div#search')
     SEARCH_FIELD = (By.CSS_SELECTOR, 'div#search > input.form-control')
-    SEARCH_BTN = (By.CSS_SELECTOR, 'div#search > button.btn-light')
+    SEARCH_BTN = (By.CSS_SELECTOR, '#search > button')
     NAVBAR_MENU = (By.ID, 'MENU')
 
     def __init__(self, browser, base_url):

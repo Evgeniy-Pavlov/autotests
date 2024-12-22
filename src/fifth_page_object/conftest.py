@@ -16,7 +16,7 @@ def pytest_addoption(parser):
     parser.addoption('--conn_params', action='store', default='conn_params.json', help='This is path db connection\
     parameters')
     parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR"])
-    parser.addoption('--phone', action='store', default='123456789')
+    parser.addoption('--phone', action='store', default='8800853535')
 
 
 @pytest.fixture
@@ -62,14 +62,20 @@ def set_currencies(request):
 @pytest.fixture(scope='session')
 def set_phone(request):
     phone = request.config.getoption('--phone')
-    query_update = f'update oc_setting set value = {phone} where key = config_telephone'
+    query = "select value from oc_setting where `key` = 'config_telephone'"
+    query_update = f"update oc_setting set value = {phone} where `key` = 'config_telephone'"
     conn_params = read_conn_params(request.config.getoption('--conn_params'))
     connection = mariadb.connect(**conn_params)
     cursor = connection.cursor()
+    cursor.execute(query)
+    old_phone = str(cursor.fetchall()[0][0])
     cursor.execute(query_update)
     connection.commit()
 
     def final():
+        query_return_phone = f"update oc_setting set value = {old_phone} where `key` = 'config_telephone'"
+        cursor.execute(query_return_phone)
+        connection.commit()
         cursor.close()
         connection.close()
 

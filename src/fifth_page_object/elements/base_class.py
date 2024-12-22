@@ -38,5 +38,5 @@ class Base_class_page:
         return self.browser.find_elements(*elem)
 
     def find_one_elem(self, elem):
-        return self.browser.find_element(*elem)
+        return self.check_visibility_of_element(elem)
 
