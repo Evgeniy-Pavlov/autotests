@@ -109,8 +109,8 @@ def browser(request):
 
 def pytest_generate_tests(metafunc):
     if 'curns' in metafunc.fixturenames:
-        query = 'select code, case when symbol_left = "" then symbol_right else symbol_left\
-         end as symbol from oc_currency oc  where code in ("GBP", "USD", "RUB")'
+        query = f'select code, case when symbol_left = "" then symbol_right else symbol_left\
+         end as symbol from oc_currency oc  where code in {tuple(metafunc.config.getoption("--currencies"))}'
         conn_params = read_conn_params(metafunc.config.getoption('--conn_params'))
         connection = mariadb.connect(**conn_params)
         cursor = connection.cursor()
@@ -118,7 +118,7 @@ def pytest_generate_tests(metafunc):
         result = cursor.fetchall()
         cursor.close()
         connection.close()
-        metafunc.parametrize('curns', [x for x in result])
+        metafunc.parametrize('curns', result)
     if 'paths' in metafunc.fixturenames:
         conn_params = read_conn_params(metafunc.config.getoption('--conn_params'))
         connection = mariadb.connect(**conn_params)
@@ -130,4 +130,5 @@ def pytest_generate_tests(metafunc):
         cursor.close()
         connection.close()
         metafunc.parametrize('paths', ['/home', '/catalog/smartphone', '/catalog/desktops', '/catalog/laptop-notebook'])
+
 

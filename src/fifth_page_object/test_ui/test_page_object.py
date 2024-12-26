@@ -1,5 +1,6 @@
 import pytest
 from src.fifth_page_object.elements.common_elements import Common_elements
+from src.fifth_page_object.elements.home_page import Home_page
 
 
 @pytest.mark.usefixtures('set_currencies', 'set_phone')
@@ -43,3 +44,19 @@ def test_common_elem_on_different_page(base_url, browser, set_currencies, paths,
     inline_items[1].click()
     search_button.click()
     assert cmn_elements.browser.current_url != f'{base_url}{paths}'
+
+
+@pytest.mark.usefixtures('set_currencies')
+def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
+    cmn_elements = Common_elements(browser, base_url)
+    cur_name, cur_symb = curns
+    cmn_elements.open_page()
+    cmn_elements.find_one_elem(cmn_elements.DROPDOWN_CURRENCY).click()
+    cmn_elements.find_one_elem(cmn_elements.CURRENCY_DICT.get(cur_name)).click()
+    home_page = Home_page(browser, base_url)
+    lst_prices_new = home_page.find_some_elem(home_page.PRICE_NEW)
+    for new_price in lst_prices_new:
+        assert cur_symb in new_price.text
+    lst_prices_tax = home_page.find_some_elem(home_page.PRICE_TAX)
+    for price_tax in lst_prices_tax:
+        assert cur_symb in price_tax.text

@@ -24,6 +24,10 @@ class Common_elements(Base_class_page):
     SEARCH_FIELD = (By.CSS_SELECTOR, 'div#search > input.form-control')
     SEARCH_BTN = (By.CSS_SELECTOR, '#search > button')
     NAVBAR_MENU = (By.ID, 'MENU')
+    CURRENCY_EURO = (By.CSS_SELECTOR, '#form-currency > div > ul > li > a[href="EUR"]')
+    CURRENCY_USD = (By.CSS_SELECTOR, '#form-currency > div > ul > li > a[href="USD"]')
+    CURRENCY_GBP = (By.CSS_SELECTOR, '#form-currency > div > ul > li > a[href="GBP"]')
+    CURRENCY_DICT = {'EUR': CURRENCY_EURO, 'USD': CURRENCY_USD, 'GBP': CURRENCY_GBP}
 
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)
@@ -32,3 +36,4 @@ class Common_elements(Base_class_page):
     def change_path(self, path):
         self.path = path
         return self
+
