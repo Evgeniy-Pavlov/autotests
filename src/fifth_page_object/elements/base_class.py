@@ -40,3 +40,7 @@ class Base_class_page:
     def find_one_elem(self, elem):
         return self.check_visibility_of_element(elem)
 
+    def click_elem(self, elem):
+        find_elem = self.check_visibility_of_element(elem)
+        find_elem.click()
+
