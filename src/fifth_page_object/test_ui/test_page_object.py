@@ -1,5 +1,6 @@
 import random
 import pytest
+from selenium.webdriver.common.by import By
 from src.fifth_page_object.elements.common_elements import Common_elements
 from src.fifth_page_object.elements.home_page import Home_page, Product_card
 from src.fifth_page_object.elements.alerts import Home_page_alerts
@@ -79,14 +80,12 @@ def test_product_add_to_cart(base_url, browser):
     product_items_pick.click()
     products = Product_card(browser, base_url)
     lst_products = home_page.find_some_elem(products.PRODUCT_CARD)
+    assert len(lst_products) == 4
     rand_product = lst_products[random.randint(1, len(lst_products)) - 1]
     rand_product.find_element(*products.ADD_TO_CART).click()
     alerts = Home_page_alerts(browser, base_url)
-    alert_add_to_cart = home_page.find_one_elem(alerts.ADD_TO_CART)
-    text_alert_add_to_cart = alert_add_to_cart.find_element(alerts.ALERT_SUCCESS)
+    text_alert_add_to_cart = alerts.check_visibility_of_element(alerts.ALERT_SUCCESS, timeout=2)
     assert 'Success: You have added' in text_alert_add_to_cart.text
-    product_items_pick.click()
-    home_page.find_one_elem(home_page.DELETE_ITEM).click()
 
 
 
