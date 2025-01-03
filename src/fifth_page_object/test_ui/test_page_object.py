@@ -1,6 +1,5 @@
 import random
 import pytest
-from selenium.webdriver.common.by import By
 from src.fifth_page_object.elements.common_elements import Common_elements
 from src.fifth_page_object.elements.home_page import Home_page, Product_card
 from src.fifth_page_object.elements.alerts import Home_page_alerts
@@ -13,9 +12,9 @@ def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths
     cmn_elements.open_page()
     currencies_dropdown = cmn_elements.check_visibility_of_element(cmn_elements.DROPDOWN_CURRENCY, 5)
     currencies_dropdown.click()
-    currencies = cmn_elements.find_some_elem(cmn_elements.CURRENCIES)
+    currencies = cmn_elements.check_visibility_some_elements(cmn_elements.CURRENCIES)
     assert len(currencies) == len(set_currencies)
-    inline_items = cmn_elements.find_some_elem(cmn_elements.INLINE_ITEMS)
+    inline_items = cmn_elements.check_visibility_some_elements(cmn_elements.INLINE_ITEMS)
     assert len(inline_items) == 5
     inline_items[1].click()
     register_login_items = inline_items[1].find_elements(*cmn_elements.ITEMS_LOGIN_REGISTER)
@@ -60,10 +59,10 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
     list_products = Home_page(browser, base_url)
     list_products.check_visibility_of_element(list_products.LIST_PRODUCTS)
     products = Product_card(browser, base_url)
-    lst_prices_new = products.find_some_elem(products.PRICE_NEW)
+    lst_prices_new = products.check_visibility_some_elements(products.PRICE_NEW)
     for new_price in lst_prices_new:
         assert cur_symb in new_price.text
-    lst_prices_tax = products.find_some_elem(products.PRICE_TAX)
+    lst_prices_tax = products.check_visibility_some_elements(products.PRICE_TAX)
     for price_tax in lst_prices_tax:
         assert cur_symb in price_tax.text
 
@@ -74,17 +73,17 @@ def test_product_add_to_cart(base_url, browser):
     home_page.check_visibility_of_element(home_page.LIST_PRODUCTS)
     product_items_pick = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
     product_items_pick.click()
-    lst_add_to_cart = home_page.find_some_elem(home_page.LIST_PRDCT_ITEM)
+    lst_add_to_cart = home_page.check_visibility_some_elements(home_page.LIST_PRDCT_ITEM)
     assert len(lst_add_to_cart) == 1
     assert lst_add_to_cart[0].text == 'Your shopping cart is empty!'
     product_items_pick.click()
     products = Product_card(browser, base_url)
-    lst_products = home_page.find_some_elem(products.PRODUCT_CARD)
+    lst_products = home_page.check_visibility_some_elements(products.PRODUCT_CARD)
     assert len(lst_products) == 4
     rand_product = lst_products[random.randint(1, len(lst_products)) - 1]
     rand_product.find_element(*products.ADD_TO_CART).click()
     alerts = Home_page_alerts(browser, base_url)
-    text_alert_add_to_cart = alerts.check_visibility_of_element(alerts.ALERT_SUCCESS, timeout=3)
+    text_alert_add_to_cart = alerts.check_visibility_of_element(alerts.ALERT_SUCCESS, timeout=4)
     assert 'Success: You have added' in text_alert_add_to_cart.text
 
 

@@ -25,6 +25,13 @@ class Base_class_page:
             self.browser.save_screenshot(f'{self.browser.session_id}-{datetime.datetime.now()}.png')
             raise AssertionError(err)
 
+    def check_visibility_some_elements(self, elem, timeout=1):
+        try:
+            return WebDriverWait(self.browser, timeout).until(EC.visibility_of_all_elements_located(elem))
+        except (TimeoutException, NoSuchElementException) as err:
+            self.browser.save_screenshot(f'{self.browser.session_id}-{datetime.datetime.now()}.png')
+            raise AssertionError(err)
+
     def title_wait(self, title, timeout=1):
         try:
             return WebDriverWait(self.browser, timeout).until((EC.title_is(title)))
@@ -34,9 +41,6 @@ class Base_class_page:
     def open_page(self):
         self.browser.get(f'{self.base_url}{self.path}')
 
-    def find_some_elem(self, elem, timeout=1):
-        self.check_visibility_of_element(elem, timeout=timeout)
-        return self.browser.find_elements(*elem)
 
     def click_elem(self, elem):
         find_elem = self.check_visibility_of_element(elem)
