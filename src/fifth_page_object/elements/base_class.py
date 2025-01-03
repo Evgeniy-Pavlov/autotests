@@ -34,11 +34,9 @@ class Base_class_page:
     def open_page(self):
         self.browser.get(f'{self.base_url}{self.path}')
 
-    def find_some_elem(self, elem):
+    def find_some_elem(self, elem, timeout=1):
+        self.check_visibility_of_element(elem, timeout=timeout)
         return self.browser.find_elements(*elem)
-
-    def find_one_elem(self, elem):
-        return self.check_visibility_of_element(elem)
 
     def click_elem(self, elem):
         find_elem = self.check_visibility_of_element(elem)

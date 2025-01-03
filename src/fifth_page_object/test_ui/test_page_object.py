@@ -23,24 +23,24 @@ def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths
     register, login = register_login_items
     assert register.get_attribute('href') == f'{base_url}/en-gb?route=account/register'
     assert login.get_attribute('href') == f'{base_url}/en-gb?route=account/login'
-    wishlist = cmn_elements.find_one_elem(cmn_elements.WISHLIST_URL)
+    wishlist = cmn_elements.check_visibility_of_element(cmn_elements.WISHLIST_URL)
     assert wishlist.get_attribute('href') == f'{base_url}/en-gb?route=account/wishlist'
     assert wishlist.get_attribute('title') == 'Wish List (0)'
-    phone_elem = cmn_elements.find_one_elem(cmn_elements.PHONE_NUMBER)
+    phone_elem = cmn_elements.check_visibility_of_element(cmn_elements.PHONE_NUMBER)
     assert phone_elem.text == get_phone
-    assert cmn_elements.find_one_elem(cmn_elements.SHOPPING_CART) == inline_items[3]
-    shopping_cart_url = cmn_elements.find_one_elem(cmn_elements.SHOPPING_CART_URL)
-    shopping_cart_text = cmn_elements.find_one_elem(cmn_elements.SHOPPING_CART_TEXT)
+    assert cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART) == inline_items[3]
+    shopping_cart_url = cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART_URL)
+    shopping_cart_text = cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART_TEXT)
     assert shopping_cart_url.get_attribute('href') == f'{base_url}/en-gb?route=checkout/cart'
     assert shopping_cart_text.text == 'Shopping Cart'
-    checkout_url = cmn_elements.find_one_elem(cmn_elements.CHECKOUT_URL)
-    checkout_text = cmn_elements.find_one_elem(cmn_elements.CHECKOUT_TEXT)
+    checkout_url = cmn_elements.check_visibility_of_element(cmn_elements.CHECKOUT_URL)
+    checkout_text = cmn_elements.check_visibility_of_element(cmn_elements.CHECKOUT_TEXT)
     assert checkout_url.get_attribute('href') == f'{base_url}/en-gb?route=checkout/checkout'
     assert checkout_text.text == 'Checkout'
     assert cmn_elements.check_visibility_of_element(cmn_elements.LOGO)
-    search_field = cmn_elements.find_one_elem(cmn_elements.SEARCH_FIELD)
+    search_field = cmn_elements.check_visibility_of_element(cmn_elements.SEARCH_FIELD)
     assert search_field.get_attribute('type') == 'text'
-    search_button = cmn_elements.find_one_elem(cmn_elements.SEARCH_BTN)
+    search_button = cmn_elements.check_visibility_of_element(cmn_elements.SEARCH_BTN)
     assert search_button.get_attribute('type') == 'button'
     search_field.clear()
     search_field.send_keys('This is test input')
@@ -56,9 +56,9 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
     cmn_elements.open_page()
     dropdown_currency = cmn_elements.check_visibility_of_element(cmn_elements.DROPDOWN_CURRENCY, 5)
     dropdown_currency.click()
-    cmn_elements.find_one_elem(cmn_elements.CURRENCY_DICT.get(cur_name)).click()
+    cmn_elements.check_visibility_of_element(cmn_elements.CURRENCY_DICT.get(cur_name)).click()
     list_products = Home_page(browser, base_url)
-    list_products.find_one_elem(list_products.LIST_PRODUCTS)
+    list_products.check_visibility_of_element(list_products.LIST_PRODUCTS)
     products = Product_card(browser, base_url)
     lst_prices_new = products.find_some_elem(products.PRICE_NEW)
     for new_price in lst_prices_new:
@@ -71,8 +71,8 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
 def test_product_add_to_cart(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
-    home_page.find_one_elem(home_page.LIST_PRODUCTS)
-    product_items_pick = home_page.find_one_elem(home_page.PRODUCT_ITEMS_PICK)
+    home_page.check_visibility_of_element(home_page.LIST_PRODUCTS)
+    product_items_pick = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
     product_items_pick.click()
     lst_add_to_cart = home_page.find_some_elem(home_page.LIST_PRDCT_ITEM)
     assert len(lst_add_to_cart) == 1
@@ -84,7 +84,7 @@ def test_product_add_to_cart(base_url, browser):
     rand_product = lst_products[random.randint(1, len(lst_products)) - 1]
     rand_product.find_element(*products.ADD_TO_CART).click()
     alerts = Home_page_alerts(browser, base_url)
-    text_alert_add_to_cart = alerts.check_visibility_of_element(alerts.ALERT_SUCCESS, timeout=2)
+    text_alert_add_to_cart = alerts.check_visibility_of_element(alerts.ALERT_SUCCESS, timeout=3)
     assert 'Success: You have added' in text_alert_add_to_cart.text
 
 
