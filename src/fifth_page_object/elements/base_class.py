@@ -41,7 +41,6 @@ class Base_class_page:
     def open_page(self):
         self.browser.get(f'{self.base_url}{self.path}')
 
-
     def click_elem(self, elem):
         find_elem = self.check_visibility_of_element(elem)
         find_elem.click()

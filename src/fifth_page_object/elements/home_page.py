@@ -30,4 +30,24 @@ class Product_card(Base_class_page):
     COMPARE_THIS_PRODUCT = (By.CSS_SELECTOR,
                     'div.content > form > div > button[aria-label="Compare this Product"]')
 
+    def __init__(self, browser, base_url):
+        super().__init__(browser, base_url)
+        self.path = '/home'
+
+    def add_to_cart_nth_product(self, number):
+        lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
+        rand_product = lst_products[number - 1]
+        rand_product.find_element(*self.ADD_TO_CART).click()
+
+    def get_info_about_product(self, number):
+        lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
+        product_name = lst_products[number - 1].find_element(*self.PRODUCT_NAME).text
+        product_description = lst_products[number - 1].find_element(*self.PRODUCT_DESCRIPTION).text
+        price_new = lst_products[number - 1].find_element(*self.PRICE_NEW).text
+        price_tax = lst_products[number - 1].find_element(*self.PRICE_TAX).text
+        return {'product_name': product_name, 'product_description': product_description, 'price_new': price_new,
+                'price_tax': price_tax}
+
+
+
 

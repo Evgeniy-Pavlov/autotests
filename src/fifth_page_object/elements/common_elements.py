@@ -37,3 +37,20 @@ class Common_elements(Base_class_page):
         self.path = path
         return self
 
+    def currencies_dropdown_click(self):
+        currencies_dropdown = self.check_visibility_of_element(self.DROPDOWN_CURRENCY, 5)
+        currencies_dropdown.click()
+
+    def my_account_click(self):
+        inline_items = self.check_visibility_some_elements(self.INLINE_ITEMS)
+        inline_items[1].click()
+
+    def input_in_search_field(self, text=''):
+        search_field = self.check_visibility_of_element(self.SEARCH_FIELD)
+        search_field.clear()
+        search_field.send_keys(text)
+
+    def change_currency(self, currency):
+        self.check_visibility_of_element(self.CURRENCY_DICT.get(currency)).click()
+
+
