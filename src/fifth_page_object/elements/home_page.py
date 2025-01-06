@@ -9,12 +9,24 @@ class Home_page(Base_class_page):
     LIST_PRODUCTS = (By.CSS_SELECTOR, '#content > div.row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-xl-4')
     PRODUCT_ITEMS_PICK = (By.CSS_SELECTOR, '#header-cart > div > button')
     LIST_PRDCT_ITEMS = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2')
-    LIST_PRDCT_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li')
+    LIST_PRDCT_EMPTY_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li')
     DELETE_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li > table > tbody > tr > td:nth-child(5) > form > button')
+    CART_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li > table > tbody > tr')
+    ITEM_PRODUCT_NAME = (By.CSS_SELECTOR, 'td.text-start > a')
+    ITEM_PRODUCT_PRICE = (By.CSS_SELECTOR, 'td:nth-child(4)')
 
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)
         self.path = '/home'
+
+    def get_info_about_product_in_cart(self):
+        result = []
+        list_items = self.check_visibility_some_elements(self.CART_ITEM)
+        for item in list_items:
+            item_name = item.find_element(*self.ITEM_PRODUCT_NAME).text
+            item_price = item.find_element(*self.ITEM_PRODUCT_PRICE).text
+            result.append({'price': item_price, 'name': item_name})
+        return result
 
 
 class Product_card(Base_class_page):

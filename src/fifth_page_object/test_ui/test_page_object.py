@@ -71,7 +71,7 @@ def test_product_add_to_cart(base_url, browser):
     product_items_pick = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
     assert product_items_pick.text == '0 item(s) - $0.00'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
-    lst_add_to_cart = home_page.check_visibility_some_elements(home_page.LIST_PRDCT_ITEM)
+    lst_add_to_cart = home_page.check_visibility_some_elements(home_page.LIST_PRDCT_EMPTY_ITEM)
     assert len(lst_add_to_cart) == 1
     assert lst_add_to_cart[0].text == 'Your shopping cart is empty!'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
@@ -80,13 +80,13 @@ def test_product_add_to_cart(base_url, browser):
     assert len(lst_products) == 4
     rand_num = random.randint(1, len(lst_products))
     products.add_to_cart_nth_product(rand_num)
-    alerts = Home_page_alerts(browser, base_url)
-    text_alert_add_to_cart = alerts.check_visibility_of_element(alerts.ALERT_SUCCESS, timeout=5)
-    assert 'Success: You have added' in text_alert_add_to_cart.text
     product_info = products.get_info_about_product(rand_num)
-    alerts.click_elem(alerts.ALERT_BUTTON_CLOSE)
     product_items_pick_new = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
     assert product_items_pick_new.text == f'1 item(s) - {product_info.get("price_new")}'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
-    lst_add_to_cart_new = home_page.check_visibility_some_elements(home_page.LIST_PRDCT_ITEM)
-    assert len(lst_add_to_cart_new) == 1
+    product_list = home_page.get_info_about_product_in_cart()
+    assert len(product_list) == 1
+    first_item = product_list[0]
+    assert first_item['name'] == product_info['product_name']
+    assert first_item['price'] == product_info['price_new']
+
