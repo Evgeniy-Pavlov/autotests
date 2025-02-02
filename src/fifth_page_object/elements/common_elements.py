@@ -27,6 +27,7 @@ class Common_elements(Base_class_page):
     CURRENCY_EURO = (By.CSS_SELECTOR, '#form-currency > div > ul > li > a[href="EUR"]')
     CURRENCY_USD = (By.CSS_SELECTOR, '#form-currency > div > ul > li > a[href="USD"]')
     CURRENCY_GBP = (By.CSS_SELECTOR, '#form-currency > div > ul > li > a[href="GBP"]')
+    WISHLIST_TEXT = (By.CSS_SELECTOR, '#wishlist-total > span')
     CURRENCY_DICT = {'EUR': CURRENCY_EURO, 'USD': CURRENCY_USD, 'GBP': CURRENCY_GBP}
 
     def __init__(self, browser, base_url):

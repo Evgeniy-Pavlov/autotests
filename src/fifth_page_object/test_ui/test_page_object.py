@@ -78,7 +78,7 @@ def test_product_add_to_cart(base_url, browser):
     products = Product_card(browser, base_url)
     lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
     assert len(lst_products) == 4
-    rand_num = random.randint(1, len(lst_products))
+    rand_num = random.randint(1, len(lst_products) - 1)
     products.add_to_cart_nth_product(rand_num)
     product_info = products.get_info_about_product(rand_num)
     product_items_pick_new = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
@@ -90,3 +90,13 @@ def test_product_add_to_cart(base_url, browser):
     assert first_item['name'] == product_info['product_name']
     assert first_item['price'] == product_info['price_new']
 
+
+def test_add_product_to_wishlist(base_url, browser):
+    home_page = Home_page(browser, base_url)
+    home_page.open_page()
+    products = Product_card(browser, base_url)
+    lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
+    rand_num = random.randint(1, len(lst_products) - 1)
+    products.add_to_wishlist_nth_product(rand_num)
+    cmn_elements = Common_elements(browser, base_url)
+    wishlist_text = cmn_elements.wait_invisibility_element(cmn_elements.WISHLIST_URL)
