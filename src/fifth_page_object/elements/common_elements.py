@@ -54,4 +54,3 @@ class Common_elements(Base_class_page):
     def change_currency(self, currency):
         self.check_visibility_of_element(self.CURRENCY_DICT.get(currency)).click()
 
-

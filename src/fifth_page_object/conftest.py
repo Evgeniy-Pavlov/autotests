@@ -1,10 +1,12 @@
+import socket
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as Chrome_Options
 from selenium.webdriver.firefox.options import Options as Firefox_Options
 import mariadb
-from helpers import read_conn_params, get_token_admin
+from helpers import read_conn_params, get_token_admin, generante_random_string, generate_random_password
 import requests
+
 
 
 def pytest_addoption(parser):
@@ -82,6 +84,34 @@ def set_phone(request):
     request.addfinalizer(final)
     return phone
 
+@pytest.fixture(scope='function')
+def create_random_user(request):
+    conn_params = read_conn_params(request.config.getoption('--conn_params'))
+    connection = mariadb.connect(**conn_params)
+    firstname = generante_random_string()
+    lastname = generante_random_string()
+    email = f'{generante_random_string()}@test.com'
+    password = generate_random_password()
+    salt = generante_random_string()
+    ip = socket.gethostbyname(socket.gethostname())
+    cursor = connection.cursor()
+    query_insert = f'INSERT INTO oc_customer (customer_group_id, language_id, firstname, lastname, email, telephone, fax,\
+    password, salt, custom_field, ip, status, safe, token, code, date_added)\
+    VALUES (1, 0, {firstname}, {lastname}, {email}, "", "", , "", {password}, {salt}, "", {ip},  1,, "",  "", NOW())'
+    cursor.execute(query_insert)
+    connection.commit()
+    query_select = f'select id from oc_customer where firstname = {firstname} and lastname = {lastname}'
+    cursor.execute(query_select)
+    user_id = str(cursor.fetchall()[0][0])
+    def final():
+        query_delete = f'delete from oc_customer where id = {user_id}'
+        cursor.execute(query_delete)
+        connection.commit()
+        cursor.close()
+        connection.close()
+    request.addfinalizer(final)
+    return (email, password)
+
 
 @pytest.fixture
 def browser(request):
@@ -130,5 +160,7 @@ def pytest_generate_tests(metafunc):
         cursor.close()
         connection.close()
         metafunc.parametrize('paths', ['/home', '/catalog/smartphone', '/catalog/desktops', '/catalog/laptop-notebook'])
+
+
 
 

@@ -99,4 +99,7 @@ def test_add_product_to_wishlist(base_url, browser):
     rand_num = random.randint(1, len(lst_products) - 1)
     products.add_to_wishlist_nth_product(rand_num)
     cmn_elements = Common_elements(browser, base_url)
-    wishlist_text = cmn_elements.wait_invisibility_element(cmn_elements.WISHLIST_URL)
+    wishlist_text = cmn_elements.wait_invisibility_element(cmn_elements.WISHLIST_URL).text
+    assert wishlist_text == 'Wish List (0)'
+
+
