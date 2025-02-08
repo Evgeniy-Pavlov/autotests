@@ -45,3 +45,11 @@ class Base_class_page:
         find_elem = self.check_visibility_of_element(elem)
         find_elem.click()
 
+    def input_in_field(self, elem, value):
+        find_field = self.check_visibility_of_element(elem)
+        find_field.clear()
+        find_field.send_keys(value)
+
+    def clear_field(self, elem):
+        find_elem = self.check_visibility_of_element(elem)
+        find_elem.clear()

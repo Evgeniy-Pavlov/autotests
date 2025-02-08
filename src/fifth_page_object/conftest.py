@@ -8,7 +8,6 @@ from helpers import read_conn_params, get_token_admin, generante_random_string, 
 import requests
 
 
-
 def pytest_addoption(parser):
     parser.addoption('--url', action='store', default='localhost:8081')
     parser.addoption('--maximized', action='store_true', help='This option\
@@ -24,6 +23,7 @@ def pytest_addoption(parser):
 @pytest.fixture
 def base_url(request):
     return request.config.getoption('--url')
+
 
 @pytest.fixture
 def get_phone(request):
@@ -84,6 +84,7 @@ def set_phone(request):
     request.addfinalizer(final)
     return phone
 
+
 @pytest.fixture(scope='function')
 def create_random_user(request):
     conn_params = read_conn_params(request.config.getoption('--conn_params'))
@@ -91,26 +92,28 @@ def create_random_user(request):
     firstname = generante_random_string()
     lastname = generante_random_string()
     email = f'{generante_random_string()}@test.com'
-    password = generate_random_password()
-    salt = generante_random_string()
+    password, password_encode, salt = generate_random_password()
     ip = socket.gethostbyname(socket.gethostname())
     cursor = connection.cursor()
-    query_insert = f'INSERT INTO oc_customer (customer_group_id, language_id, firstname, lastname, email, telephone, fax,\
-    password, salt, custom_field, ip, status, safe, token, code, date_added)\
-    VALUES (1, 0, {firstname}, {lastname}, {email}, "", "", , "", {password}, {salt}, "", {ip},  1,, "",  "", NOW())'
+    query_insert = f'INSERT INTO oc_customer (customer_group_id, store_id, language_id, firstname, lastname, email, telephone,\
+    password, custom_field, ip, status, safe, token, code, date_added)\
+    VALUES (1, 0, 1, "{firstname}", "{lastname}", "{email}", "", "{str(password_encode)[2:-1]}", "", "{ip}",\
+    1, 0,  "", "", NOW())'
     cursor.execute(query_insert)
     connection.commit()
-    query_select = f'select id from oc_customer where firstname = {firstname} and lastname = {lastname}'
+    query_select = f'select customer_id from oc_customer where firstname = "{firstname}" and lastname = "{lastname}"'
     cursor.execute(query_select)
     user_id = str(cursor.fetchall()[0][0])
+
     def final():
-        query_delete = f'delete from oc_customer where id = {user_id}'
+        query_delete = f'delete from oc_customer where customer_id = {user_id}'
         cursor.execute(query_delete)
         connection.commit()
         cursor.close()
         connection.close()
+
     request.addfinalizer(final)
-    return (email, password)
+    return email, password
 
 
 @pytest.fixture
@@ -160,7 +163,3 @@ def pytest_generate_tests(metafunc):
         cursor.close()
         connection.close()
         metafunc.parametrize('paths', ['/home', '/catalog/smartphone', '/catalog/desktops', '/catalog/laptop-notebook'])
-
-
-
-

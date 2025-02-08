@@ -6,3 +6,4 @@ dnspython==2.7.0
 email-validator==2.2.0
 selenium==4.26.1
 mariadb==1.1.11
+bcrypt==4.2.1

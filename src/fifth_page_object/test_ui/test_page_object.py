@@ -2,7 +2,8 @@ import random
 import pytest
 from src.fifth_page_object.elements.common_elements import Common_elements
 from src.fifth_page_object.elements.home_page import Home_page, Product_card
-from src.fifth_page_object.elements.alerts import Home_page_alerts
+from src.fifth_page_object.elements.login_form import Login_form
+from src.fifth_page_object.elements.personal_page import Personal_page
 
 
 @pytest.mark.usefixtures('set_currencies', 'set_phone')
@@ -91,15 +92,40 @@ def test_product_add_to_cart(base_url, browser):
     assert first_item['price'] == product_info['price_new']
 
 
-def test_add_product_to_wishlist(base_url, browser):
-    home_page = Home_page(browser, base_url)
-    home_page.open_page()
-    products = Product_card(browser, base_url)
-    lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
-    rand_num = random.randint(1, len(lst_products) - 1)
-    products.add_to_wishlist_nth_product(rand_num)
-    cmn_elements = Common_elements(browser, base_url)
-    wishlist_text = cmn_elements.wait_invisibility_element(cmn_elements.WISHLIST_URL).text
-    assert wishlist_text == 'Wish List (0)'
-
+@pytest.mark.usefixtures
+def test_login_user(base_url, browser, create_random_user):
+    cmn_elem = Common_elements(browser, base_url)
+    cmn_elem.open_page()
+    email, password = create_random_user
+    cmn_elem.my_account_click()
+    cmn_elem.click_elem(cmn_elem.LOGIN_URL)
+    personal_page = Personal_page(browser, base_url)
+    login_page = Login_form(browser, base_url)
+    login_page.click_elem(login_page.LOGIN_BUTTON)
+    personal_page.wait_invisibility_element(personal_page.MY_ACCOUNT_HEADER)
+    login_page.input_in_field(login_page.EMAIL_INPUT, email)
+    login_page.click_elem(login_page.LOGIN_BUTTON)
+    personal_page.wait_invisibility_element(personal_page.MY_ACCOUNT_HEADER)
+    login_page.clear_field(login_page.EMAIL_INPUT)
+    login_page.input_in_field(login_page.PASSWORD_INPUT, password)
+    login_page.click_elem(login_page.LOGIN_BUTTON)
+    personal_page.wait_invisibility_element(personal_page.MY_ACCOUNT_HEADER)
+    login_page.clear_field(login_page.PASSWORD_INPUT)
+    login_page.input_in_field(login_page.EMAIL_INPUT, email)
+    login_page.input_in_field(login_page.PASSWORD_INPUT, password)
+    login_page.click_elem(login_page.LOGIN_BUTTON)
+    personal_page.check_visibility_of_element(personal_page.MY_ACCOUNT_HEADER)
+    assert 'account/account&customer_token' in login_page.browser.current_url
+    cmn_elem.my_account_click()
+    my_accout_url = cmn_elem.check_visibility_of_element(cmn_elem.MY_ACCOUNT_URL)
+    assert my_accout_url.text == 'My Account'
+    order_history = cmn_elem.check_visibility_of_element(cmn_elem.ORDER_HISTORY)
+    assert order_history.text == 'Order History'
+    transactions = cmn_elem.check_visibility_of_element(cmn_elem.TRANSACTIONS)
+    assert transactions.text == 'Transactions'
+    downloads = cmn_elem.check_visibility_of_element(cmn_elem.MY_ACCOUNT_DOWNLOADS)
+    assert downloads.text == 'Downloads'
+    logout = cmn_elem.check_visibility_of_element(cmn_elem.LOGOUT_URL)
+    assert logout.text == 'Logout'
+    cmn_elem.click_elem(cmn_elem.LOGOUT_URL)
 

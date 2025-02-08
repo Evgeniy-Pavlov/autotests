@@ -1,8 +1,9 @@
 import json
 import random
 from string import ascii_lowercase
-from hashlib import sha256
+import bcrypt
 import requests
+
 
 
 def read_conn_params(file):
@@ -19,7 +20,9 @@ def get_token_admin(base_url):
 
 def generante_random_string():
     rand_len = random.randint(5, 10)
-    return ''.join([ascii_lowercase[random.randint(0, len(ascii_lowercase)-1)] for x in rand_len])
+    return ''.join([ascii_lowercase[random.randint(0, len(ascii_lowercase)-1)] for x in range(0, rand_len)])
 
 def generate_random_password():
-    return sha256(generante_random_string()).hexdigest()
+    rand_pass = generante_random_string()
+    salt = bcrypt.gensalt()
+    return (rand_pass, bcrypt.hashpw(rand_pass.encode(), salt), salt)

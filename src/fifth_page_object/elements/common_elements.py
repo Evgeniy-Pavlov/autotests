@@ -1,6 +1,4 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from src.fifth_page_object.elements.base_class import Base_class_page
 
 
@@ -19,6 +17,18 @@ class Common_elements(Base_class_page):
     CHECKOUT_URL = (By.CSS_SELECTOR, 'ul > li:nth-child(5) > a')
     CHECKOUT_TEXT = (By.CSS_SELECTOR, 'ul > li:nth-child(5) > a > span.d-none')
     LOGO_URL = (By.CSS_SELECTOR, 'div#logo > a')
+    LOGIN_URL = (By.CSS_SELECTOR,
+                 '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(2) > a')
+    MY_ACCOUNT_URL = (By.CSS_SELECTOR,
+                      '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(1) > a')
+    ORDER_HISTORY = (By.CSS_SELECTOR,
+                     '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(2) > a')
+    TRANSACTIONS = (By.CSS_SELECTOR,
+                    '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(3) > a')
+    MY_ACCOUNT_DOWNLOADS = (By.CSS_SELECTOR,
+                            '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(4) > a')
+    LOGOUT_URL = (By.CSS_SELECTOR,
+                  '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(5) > a')
     LOGO = (By.CSS_SELECTOR, 'div#logo > a > img.img-fluid')
     SEARCH = (By.CSS_SELECTOR, 'div#search')
     SEARCH_FIELD = (By.CSS_SELECTOR, 'div#search > input.form-control')
@@ -54,3 +64,7 @@ class Common_elements(Base_class_page):
     def change_currency(self, currency):
         self.check_visibility_of_element(self.CURRENCY_DICT.get(currency)).click()
 
+    def logout_user(self):
+        self.my_account_click()
+        find_elem = self.check_visibility_of_element(self.LOGOUT_URL)
+        find_elem.click()

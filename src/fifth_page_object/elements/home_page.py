@@ -1,6 +1,4 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from src.fifth_page_object.elements.base_class import Base_class_page
 
 
@@ -53,7 +51,7 @@ class Product_card(Base_class_page):
 
     def add_to_wishlist_nth_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
-        rand_product = lst_products[number - 1]
+        rand_product = lst_products[number]
         rand_product.find_element(*self.ADD_TO_WISHLIST).click()
 
 
