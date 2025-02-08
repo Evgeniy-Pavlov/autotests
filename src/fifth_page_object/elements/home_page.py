@@ -51,9 +51,8 @@ class Product_card(Base_class_page):
 
     def add_to_wishlist_nth_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
-        rand_product = lst_products[number]
+        rand_product = lst_products[number-1]
         rand_product.find_element(*self.ADD_TO_WISHLIST).click()
-
 
     def get_info_about_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)

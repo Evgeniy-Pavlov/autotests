@@ -68,7 +68,7 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
 def test_product_add_to_cart(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
-    home_page.check_visibility_of_element(home_page.LIST_PRODUCTS)
+    home_page.check_visibility_of_element(home_page.LIST_PRODUCTS, timeout=4)
     product_items_pick = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
     assert product_items_pick.text == '0 item(s) - $0.00'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
@@ -92,7 +92,6 @@ def test_product_add_to_cart(base_url, browser):
     assert first_item['price'] == product_info['price_new']
 
 
-@pytest.mark.usefixtures
 def test_login_user(base_url, browser, create_random_user):
     cmn_elem = Common_elements(browser, base_url)
     cmn_elem.open_page()
@@ -117,8 +116,8 @@ def test_login_user(base_url, browser, create_random_user):
     personal_page.check_visibility_of_element(personal_page.MY_ACCOUNT_HEADER)
     assert 'account/account&customer_token' in login_page.browser.current_url
     cmn_elem.my_account_click()
-    my_accout_url = cmn_elem.check_visibility_of_element(cmn_elem.MY_ACCOUNT_URL)
-    assert my_accout_url.text == 'My Account'
+    my_account_url = cmn_elem.check_visibility_of_element(cmn_elem.MY_ACCOUNT_URL)
+    assert my_account_url.text == 'My Account'
     order_history = cmn_elem.check_visibility_of_element(cmn_elem.ORDER_HISTORY)
     assert order_history.text == 'Order History'
     transactions = cmn_elem.check_visibility_of_element(cmn_elem.TRANSACTIONS)
