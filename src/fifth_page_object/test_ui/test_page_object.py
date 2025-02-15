@@ -128,3 +128,15 @@ def test_login_user(base_url, browser, create_random_user):
     assert logout.text == 'Logout'
     cmn_elem.click_elem(cmn_elem.LOGOUT_URL)
 
+
+def test_add_to_wishlist_without_login(base_url, browser):
+    home_page = Home_page(browser, base_url)
+    home_page.open_page()
+    products = Product_card(browser, base_url)
+    lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
+    assert len(lst_products) == 4
+    rand_num = random.randint(1, len(lst_products) - 1)
+    products.add_to_wishlist_nth_product(rand_num)
+    cmn_elem = Common_elements(browser, base_url)
+    wishlist = cmn_elem.check_visibility_of_element(cmn_elem.WISHLIST_TEXT, timeout=4)
+    assert wishlist.text == 'Wish List (0)'

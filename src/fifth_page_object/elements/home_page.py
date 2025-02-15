@@ -36,7 +36,7 @@ class Product_card(Base_class_page):
     PRODUCT_DESCRIPTION = (By.CSS_SELECTOR, 'div.content > div > p')
     ADD_TO_CART = (By.CSS_SELECTOR, 'div.content > form > div.button-group > button[title="Add to Cart"]')
     ADD_TO_WISHLIST = (By.CSS_SELECTOR,
-                   'div.content > form > div > button[aria-label="Add to Wish List"]')
+                   'div.content > form > div.button-group > button[title="Add to Wish List"]')
     COMPARE_THIS_PRODUCT = (By.CSS_SELECTOR,
                     'div.content > form > div > button[aria-label="Compare this Product"]')
 
