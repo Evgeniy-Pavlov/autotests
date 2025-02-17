@@ -11,6 +11,20 @@ class Base_class_page:
         self.path = '/'
         self.base_url = base_url
 
+    def check_presence_of_element(self, elem, timeout=1):
+        try:
+            return WebDriverWait(self.browser, timeout).until(EC.presence_of_element_located(elem))
+        except (TimeoutException, NoSuchElementException) as err:
+            self.browser.save_screenshot(f'{self.browser.session_id}-{datetime.datetime.now()}.png')
+            raise AssertionError(err)
+
+    def check_presence_some_elements(self, elem, timeout=1):
+        try:
+            return WebDriverWait(self.browser, timeout).until(EC.presence_of_all_elements_located(elem))
+        except (TimeoutException, NoSuchElementException) as err:
+            self.browser.save_screenshot(f'{self.browser.session_id}-{datetime.datetime.now()}.png')
+            raise AssertionError(err)
+
     def check_visibility_of_element(self, elem, timeout=1):
         try:
             return WebDriverWait(self.browser, timeout).until(EC.visibility_of_element_located(elem))

@@ -12,6 +12,7 @@ class Home_page(Base_class_page):
     CART_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li > table > tbody > tr')
     ITEM_PRODUCT_NAME = (By.CSS_SELECTOR, 'td.text-start > a')
     ITEM_PRODUCT_PRICE = (By.CSS_SELECTOR, 'td:nth-child(4)')
+    CAROUSEL_ITEM = (By.CSS_SELECTOR, '#carousel-banner-0 > div.carousel-inner > div.carousel-item')
 
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)
@@ -55,11 +56,12 @@ class Product_card(Base_class_page):
         rand_product.find_element(*self.ADD_TO_WISHLIST).click()
 
     def get_info_about_product(self, number):
+        number -= 1
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
-        product_name = lst_products[number - 1].find_element(*self.PRODUCT_NAME).text
-        product_description = lst_products[number - 1].find_element(*self.PRODUCT_DESCRIPTION).text
-        price_new = lst_products[number - 1].find_element(*self.PRICE_NEW).text
-        price_tax = lst_products[number - 1].find_element(*self.PRICE_TAX).text
+        product_name = lst_products[number].find_element(*self.PRODUCT_NAME).text
+        product_description = lst_products[number].find_element(*self.PRODUCT_DESCRIPTION).text
+        price_new = lst_products[number].find_element(*self.PRICE_NEW).text
+        price_tax = lst_products[number].find_element(*self.PRICE_TAX).text
         return {'product_name': product_name, 'product_description': product_description, 'price_new': price_new,
                 'price_tax': price_tax}
 

@@ -68,7 +68,7 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
 def test_product_add_to_cart(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
-    home_page.check_visibility_of_element(home_page.LIST_PRODUCTS, timeout=4)
+    home_page.check_visibility_of_element(home_page.LIST_PRODUCTS)
     product_items_pick = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
     assert product_items_pick.text == '0 item(s) - $0.00'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
@@ -79,7 +79,7 @@ def test_product_add_to_cart(base_url, browser):
     products = Product_card(browser, base_url)
     lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
     assert len(lst_products) == 4
-    rand_num = random.randint(1, len(lst_products) - 1)
+    rand_num = random.randint(0, len(lst_products) - 1)
     products.add_to_cart_nth_product(rand_num)
     product_info = products.get_info_about_product(rand_num)
     product_items_pick_new = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
@@ -140,3 +140,10 @@ def test_add_to_wishlist_without_login(base_url, browser):
     cmn_elem = Common_elements(browser, base_url)
     wishlist = cmn_elem.check_visibility_of_element(cmn_elem.WISHLIST_TEXT, timeout=4)
     assert wishlist.text == 'Wish List (0)'
+
+
+def test_change_slide_in_carousel(base_url, browser):
+    home_page = Home_page(browser, base_url)
+    home_page.open_page()
+    carousel_items = home_page.check_presence_some_elements(home_page.CAROUSEL_ITEM)
+    assert len(carousel_items) == 2
