@@ -13,6 +13,12 @@ class Home_page(Base_class_page):
     ITEM_PRODUCT_NAME = (By.CSS_SELECTOR, 'td.text-start > a')
     ITEM_PRODUCT_PRICE = (By.CSS_SELECTOR, 'td:nth-child(4)')
     CAROUSEL_ITEM = (By.CSS_SELECTOR, '#carousel-banner-0 > div.carousel-inner > div.carousel-item')
+    FIRST_CAROUSEL_ITEM = (By.CSS_SELECTOR, '#carousel-banner-0 > div.carousel-inner > div.carousel-item:nth-child(1)')
+    SECOND_CAROUSEL_ITEM = (By.CSS_SELECTOR, '#carousel-banner-0 > div.carousel-inner > div.carousel-item:nth-child(2)')
+    CAROUSEL_BANNER_ITEM = (By.CSS_SELECTOR, '#carousel-banner-1 > div.carousel-inner > div')
+    FIRST_BANNER_ITEM = (By.CSS_SELECTOR, '#carousel-banner-1 > div.carousel-inner > div:nth-child(1)')
+    SECOND_BANNER_ITEM = (By.CSS_SELECTOR, '#carousel-banner-1 > div.carousel-inner > div:nth-child(2)')
+    THIRD_BANNER_ITEM = (By.CSS_SELECTOR, '#carousel-banner-1 > div.carousel-inner > div:nth-child(3)')
 
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)

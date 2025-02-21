@@ -68,7 +68,7 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
 def test_product_add_to_cart(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
-    home_page.check_visibility_of_element(home_page.LIST_PRODUCTS)
+    home_page.check_visibility_of_element(home_page.LIST_PRODUCTS, 5)
     product_items_pick = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
     assert product_items_pick.text == '0 item(s) - $0.00'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
@@ -133,17 +133,36 @@ def test_add_to_wishlist_without_login(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
     products = Product_card(browser, base_url)
-    lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
+    lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD, 5)
     assert len(lst_products) == 4
     rand_num = random.randint(1, len(lst_products) - 1)
     products.add_to_wishlist_nth_product(rand_num)
     cmn_elem = Common_elements(browser, base_url)
-    wishlist = cmn_elem.check_visibility_of_element(cmn_elem.WISHLIST_TEXT, timeout=4)
+    wishlist = cmn_elem.check_visibility_of_element(cmn_elem.WISHLIST_TEXT, timeout=5)
     assert wishlist.text == 'Wish List (0)'
 
 
 def test_change_slide_in_carousel(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
-    carousel_items = home_page.check_presence_some_elements(home_page.CAROUSEL_ITEM)
+    carousel_items = home_page.check_presence_some_elements(home_page.CAROUSEL_ITEM, 5)
     assert len(carousel_items) == 2
+    home_page.check_visibility_of_element(home_page.FIRST_CAROUSEL_ITEM)
+    home_page.check_visibility_of_element(home_page.SECOND_CAROUSEL_ITEM, 6)
+    home_page.wait_invisibility_element(home_page.FIRST_CAROUSEL_ITEM)
+
+
+def test_change_slide_in_carousel_bannder(base_url, browser):
+    home_page = Home_page(browser, base_url)
+    home_page.open_page()
+    carousel_items = home_page.check_presence_some_elements(home_page.CAROUSEL_BANNER_ITEM, 5)
+    assert len(carousel_items) == 3
+    home_page.check_visibility_of_element(home_page.FIRST_BANNER_ITEM)
+    home_page.wait_invisibility_element(home_page.SECOND_BANNER_ITEM)
+    home_page.wait_invisibility_element(home_page.THIRD_BANNER_ITEM)
+    home_page.check_visibility_of_element(home_page.SECOND_BANNER_ITEM, 6)
+    home_page.wait_invisibility_element(home_page.FIRST_BANNER_ITEM)
+    home_page.wait_invisibility_element(home_page.THIRD_BANNER_ITEM)
+    home_page.check_visibility_of_element(home_page.THIRD_BANNER_ITEM, 6)
+    home_page.wait_invisibility_element(home_page.FIRST_BANNER_ITEM)
+    home_page.wait_invisibility_element(home_page.SECOND_BANNER_ITEM)
