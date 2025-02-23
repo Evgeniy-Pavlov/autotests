@@ -1,5 +1,7 @@
+import datetime
 import socket
 import pytest
+import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as Chrome_Options
 from selenium.webdriver.firefox.options import Options as Firefox_Options
@@ -18,6 +20,7 @@ def pytest_addoption(parser):
     parameters')
     parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR"])
     parser.addoption('--phone', action='store', default='8800853535')
+    parser.addoption('--log_level', action='store', default='INFO')
 
 
 @pytest.fixture
@@ -121,6 +124,13 @@ def browser(request):
     browser_arg = request.config.getoption('--browser')
     headless = request.config.getoption('--headless')
     maximized = request.config.getoption('--maximized')
+    log_level = request.config.getoption('--log_level')
+    name_node = node_name(request)
+    logger = logging.getLogger(name_node)
+    file_handler = logging.FileHandler(f'logs/{name_node}.log')
+    file_handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
+    logger.addHandler(file_handler)
+    logger.setLevel(level=log_level)
     options = Chrome_Options() if browser_arg == 'chrome' else Firefox_Options()
     options.page_load_strategy = 'none'
     if headless:
@@ -132,12 +142,24 @@ def browser(request):
     if maximized:
         driver.maximize_window()
     driver.implicitly_wait(1)
+    driver.log_level = log_level
+    driver.logger = logger
+    driver.name_of_test = name_node
+    logger.info(
+        f'Test {driver.name_of_test} started at {datetime.datetime.now()}. Browser options: {options}')
 
     def final():
         driver.quit()
+        logger.info(f'Test {driver.name_of_test} finished at {datetime.datetime.now()}')
 
     request.addfinalizer(final)
     return driver
+
+
+def node_name(request):
+    name = request.node.name
+    t = str.maketrans({'[': '_', ']':'', '/':''})
+    return name.translate(t)
 
 
 def pytest_generate_tests(metafunc):

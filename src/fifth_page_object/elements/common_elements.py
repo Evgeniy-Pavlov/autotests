@@ -49,22 +49,27 @@ class Common_elements(Base_class_page):
         return self
 
     def currencies_dropdown_click(self):
+        self.logger.info('Open a dropdown of currencies')
         currencies_dropdown = self.check_visibility_of_element(self.DROPDOWN_CURRENCY, 5)
         currencies_dropdown.click()
 
     def my_account_click(self):
-        inline_items = self.check_visibility_some_elements(self.INLINE_ITEMS)
+        self.logger.info('Clicking on My account')
+        inline_items = self.check_visibility_some_elements(self.INLINE_ITEMS, timeout=5)
         inline_items[1].click()
 
     def input_in_search_field(self, text=''):
+        self.logger.info(f'Entering into a search field value "{text}"')
         search_field = self.check_visibility_of_element(self.SEARCH_FIELD)
         search_field.clear()
         search_field.send_keys(text)
 
     def change_currency(self, currency):
+        self.logger.info(f'Change currency to {currency}')
         self.check_visibility_of_element(self.CURRENCY_DICT.get(currency)).click()
 
     def logout_user(self):
+        self.logger.info('User logout')
         self.my_account_click()
         find_elem = self.check_visibility_of_element(self.LOGOUT_URL)
         find_elem.click()
