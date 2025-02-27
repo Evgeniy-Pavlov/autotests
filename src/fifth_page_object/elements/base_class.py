@@ -2,6 +2,7 @@ import datetime
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Base_class_page:
@@ -11,6 +12,7 @@ class Base_class_page:
         self.path = '/'
         self.base_url = base_url
         self.logger = browser.logger
+        self.actions = ActionChains(browser)
 
     def check_presence_of_element(self, elem, timeout=1):
         try:

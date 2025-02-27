@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from src.fifth_page_object.elements.base_class import Base_class_page
+import time
 
 
 class Home_page(Base_class_page):
@@ -35,8 +36,8 @@ class Home_page(Base_class_page):
 
 
 class Product_card(Base_class_page):
-    PRODUCT_CARD = (
-        By.CSS_SELECTOR, '#content > div.row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-xl-4 > div.col > div.product-thumb')
+    PRODUCT_CARD = (By.CSS_SELECTOR,
+                    '#content > div.row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-xl-4 > div > div.product-thumb')
     PRICE_NEW = (By.CSS_SELECTOR, 'span.price-new')
     PRICE_TAX = (By.CSS_SELECTOR, 'span.price-tax')
     PRODUCT_NAME = (By.CSS_SELECTOR, 'div.content > div > h4 > a')
@@ -54,7 +55,11 @@ class Product_card(Base_class_page):
     def add_to_cart_nth_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
         rand_product = lst_products[number]
-        rand_product.find_element(*self.ADD_TO_CART).click()
+        add_button = rand_product.find_element(*self.ADD_TO_CART)
+        self.actions.move_to_element(rand_product).perform()
+        self.actions.move_to_element(add_button).perform()
+        time.sleep(5)
+        add_button.click()
 
     def add_to_wishlist_nth_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)

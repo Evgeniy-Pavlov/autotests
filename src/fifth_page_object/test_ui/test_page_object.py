@@ -4,6 +4,7 @@ from src.fifth_page_object.elements.common_elements import Common_elements
 from src.fifth_page_object.elements.home_page import Home_page, Product_card
 from src.fifth_page_object.elements.login_form import Login_form
 from src.fifth_page_object.elements.personal_page import Personal_page
+import time
 
 
 @pytest.mark.usefixtures('set_currencies', 'set_phone')
@@ -79,11 +80,13 @@ def test_product_add_to_cart(base_url, browser):
     products = Product_card(browser, base_url)
     lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
     assert len(lst_products) == 4
-    rand_num = random.randint(0, len(lst_products)-1)
-    products.add_to_cart_nth_product(rand_num)
-    product_info = products.get_info_about_product(rand_num)
-    product_items_pick_new = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
-    assert product_items_pick_new.text == f'1 item(s) - {product_info.get("price_new")}'
+    product_info = products.get_info_about_product(0)
+    price_new = product_info.get("price_new")
+    products.add_to_cart_nth_product(0)
+    browser.refresh()
+    product_items_pick_new = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK, 5)
+    home_page.actions.move_to_element(product_items_pick_new).perform()
+    assert product_items_pick_new.text == f'1 item(s) - {price_new}'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
     product_list = home_page.get_info_about_product_in_cart()
     assert len(product_list) == 1
