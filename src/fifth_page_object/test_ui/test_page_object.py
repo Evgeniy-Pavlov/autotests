@@ -1,13 +1,10 @@
 import random
-import pytest
 from src.fifth_page_object.elements.common_elements import Common_elements
 from src.fifth_page_object.elements.home_page import Home_page, Product_card
 from src.fifth_page_object.elements.login_form import Login_form
 from src.fifth_page_object.elements.personal_page import Personal_page
-import time
 
 
-@pytest.mark.usefixtures('set_currencies', 'set_phone')
 def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths, get_phone):
     cmn_elements = Common_elements(browser, base_url)
     cmn_elements.change_path(paths)
@@ -48,7 +45,6 @@ def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths
     assert cmn_elements.browser.current_url != f'{base_url}{paths}'
 
 
-@pytest.mark.usefixtures('set_currencies')
 def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
     cmn_elements = Common_elements(browser, base_url)
     cur_name, cur_symb = curns

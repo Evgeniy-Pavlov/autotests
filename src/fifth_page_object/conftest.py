@@ -6,8 +6,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as Chrome_Options
 from selenium.webdriver.firefox.options import Options as Firefox_Options
 import mariadb
-from helpers import read_conn_params, get_token_admin, generante_random_string, generate_random_password
 import requests
+from helpers import read_conn_params, get_token_admin, generante_random_string, generate_random_password
 
 
 def pytest_addoption(parser):
@@ -21,6 +21,12 @@ def pytest_addoption(parser):
     parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR"])
     parser.addoption('--phone', action='store', default='8800853535')
     parser.addoption('--log_level', action='store', default='INFO')
+
+
+def node_name(request):
+    name = request.node.name
+    t = str.maketrans({'[': '_', ']': '', '/': ''})
+    return name.translate(t)
 
 
 @pytest.fixture
@@ -133,10 +139,16 @@ def browser(request):
     logger.setLevel(level=log_level)
     options = Chrome_Options() if browser_arg == 'chrome' else Firefox_Options()
     options.page_load_strategy = 'none'
+    options.add_argument("--ignore-certificate-errors")
     if headless:
         options.add_argument('--headless=new')
     if browser_arg == 'chrome':
         driver = webdriver.Chrome(options=options)
+        options.set_capability('goog:loggingPrefs', {
+            'browser': 'ALL',
+            'performance': 'ALL',
+            'driver': 'ALL'
+        })
     elif browser_arg == 'firefox':
         driver = webdriver.Firefox(options=options)
     if maximized:
@@ -149,17 +161,15 @@ def browser(request):
         f'Test {driver.name_of_test} started at {datetime.datetime.now()}. Browser options: {options}')
 
     def final():
+        log_file = f'logs/browser_logs_{name_node}.log'
+        browser_logs = driver.get_log('browser')
+        with open(log_file, 'w') as f:
+            f.write(str(browser_logs))
         driver.quit()
         logger.info(f'Test {driver.name_of_test} finished at {datetime.datetime.now()}')
 
     request.addfinalizer(final)
     return driver
-
-
-def node_name(request):
-    name = request.node.name
-    t = str.maketrans({'[': '_', ']':'', '/':''})
-    return name.translate(t)
 
 
 def pytest_generate_tests(metafunc):

@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 from src.fifth_page_object.elements.base_class import Base_class_page
-import time
 
 
 class Home_page(Base_class_page):
@@ -9,7 +8,8 @@ class Home_page(Base_class_page):
     PRODUCT_ITEMS_PICK = (By.CSS_SELECTOR, '#header-cart > div > button')
     LIST_PRDCT_ITEMS = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2')
     LIST_PRDCT_EMPTY_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li')
-    DELETE_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li > table > tbody > tr > td:nth-child(5) > form > button')
+    DELETE_ITEM = (
+        By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li > table > tbody > tr > td:nth-child(5) > form > button')
     CART_ITEM = (By.CSS_SELECTOR, '#header-cart > div > ul.p-2 > li > table > tbody > tr')
     ITEM_PRODUCT_NAME = (By.CSS_SELECTOR, 'td.text-start > a')
     ITEM_PRODUCT_PRICE = (By.CSS_SELECTOR, 'td:nth-child(4)')
@@ -44,9 +44,9 @@ class Product_card(Base_class_page):
     PRODUCT_DESCRIPTION = (By.CSS_SELECTOR, 'div.content > div > p')
     ADD_TO_CART = (By.CSS_SELECTOR, 'div.content > form > div.button-group > button[title="Add to Cart"]')
     ADD_TO_WISHLIST = (By.CSS_SELECTOR,
-                   'div.content > form > div.button-group > button[title="Add to Wish List"]')
+                       'div.content > form > div.button-group > button[title="Add to Wish List"]')
     COMPARE_THIS_PRODUCT = (By.CSS_SELECTOR,
-                    'div.content > form > div > button[aria-label="Compare this Product"]')
+                            'div.content > form > div > button[aria-label="Compare this Product"]')
 
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)
@@ -58,7 +58,6 @@ class Product_card(Base_class_page):
         add_button = rand_product.find_element(*self.ADD_TO_CART)
         self.actions.move_to_element(rand_product).perform()
         self.actions.move_to_element(add_button).perform()
-        time.sleep(5)
         add_button.click()
 
     def add_to_wishlist_nth_product(self, number):
@@ -74,7 +73,3 @@ class Product_card(Base_class_page):
         price_tax = lst_products[number].find_element(*self.PRICE_TAX).text
         return {'product_name': product_name, 'product_description': product_description, 'price_new': price_new,
                 'price_tax': price_tax}
-
-
-
-
