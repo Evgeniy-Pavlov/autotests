@@ -3,6 +3,7 @@ from src.fifth_page_object.elements.common_elements import Common_elements
 from src.fifth_page_object.elements.home_page import Home_page, Product_card
 from src.fifth_page_object.elements.login_form import Login_form
 from src.fifth_page_object.elements.personal_page import Personal_page
+from src.fifth_page_object.elements.registration import Registration_page
 
 
 def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths, get_phone):
@@ -165,3 +166,73 @@ def test_change_slide_in_carousel_banner(base_url, browser):
     home_page.check_visibility_of_element(home_page.THIRD_BANNER_ITEM, 6)
     home_page.wait_invisibility_element(home_page.FIRST_BANNER_ITEM)
     home_page.wait_invisibility_element(home_page.SECOND_BANNER_ITEM)
+
+
+def test_fields_of_registration_page(base_url, browser):
+    cmn_elem = Common_elements(browser, base_url)
+    cmn_elem.open_page()
+    cmn_elem.my_account_click()
+    cmn_elem.check_visibility_of_element(cmn_elem.REGISTRATION_URL).click()
+    cmn_elem.title_wait('Register Account')
+    registration_page = Registration_page(browser, base_url)
+    header_of_page = registration_page.check_visibility_of_element(registration_page.HEADER)
+    personal_details = registration_page.check_visibility_of_element(registration_page.PERSONAL_DETAILS_LEGEND)
+    assert personal_details.text == 'Your Personal Details'
+    assert header_of_page.text == 'Register Account'
+    first_name_label = registration_page.check_visibility_of_element(registration_page.FIRST_NAME_LABEL)
+    assert first_name_label.text == 'First Name'
+    first_name_input = registration_page.check_visibility_of_element(registration_page.FIRST_NAME_INPUT)
+    assert first_name_input.get_attribute('type') == 'text'
+    assert first_name_input.get_attribute('value') == ''
+    assert first_name_input.get_attribute('placeholder') == 'First Name'
+    registration_page.wait_invisibility_element(registration_page.ERROR_FIRST_NAME)
+    last_name_label = registration_page.check_visibility_of_element(registration_page.LAST_NAME_LABEL)
+    assert last_name_label.text == 'Last Name'
+    last_name_input = registration_page.check_visibility_of_element(registration_page.LAST_NAME_INPUT)
+    assert last_name_input.get_attribute('type') == 'text'
+    assert last_name_input.get_attribute('value') == ''
+    assert last_name_input.get_attribute('placeholder') == 'Last Name'
+    registration_page.wait_invisibility_element(registration_page.ERROR_LAST_NAME)
+    email_label = registration_page.check_visibility_of_element(registration_page.EMAIL_LABEL)
+    assert email_label.text == 'E-Mail'
+    email_input = registration_page.check_visibility_of_element(registration_page.EMAIL_INPUT)
+    assert email_input.get_attribute('type') == 'email'
+    assert email_input.get_attribute('value') == ''
+    assert email_input.get_attribute('placeholder') == 'E-Mail'
+    registration_page.wait_invisibility_element(registration_page.ERROR_EMAIL)
+    password_details = registration_page.check_visibility_of_element(registration_page.PASSWORD_LEGEND)
+    assert password_details.text == 'Your Password'
+    password_input = registration_page.check_visibility_of_element(registration_page.PASSWORD_INPUT)
+    assert password_input.get_attribute('type') == 'password'
+    assert password_input.get_attribute('value') == ''
+    assert password_input.get_attribute('placeholder') == 'Password'
+    registration_page.wait_invisibility_element(registration_page.ERROR_PASSWORD)
+    newsletter = registration_page.check_visibility_of_element(registration_page.NEWLETTER_LEGEND)
+    assert newsletter.text == 'Newsletter'
+    subscribe_label = registration_page.check_visibility_of_element(registration_page.SUBSCRIBE_LABEL)
+    assert subscribe_label.text == 'Subscribe'
+    subscribe_switch = registration_page.check_visibility_of_element(registration_page.SUBSCRIBE_SWITCH)
+    assert subscribe_switch.get_attribute('type') == 'checkbox'
+    policy_label = registration_page.check_visibility_of_element(registration_page.POLICY_LABEL)
+    assert policy_label.text == 'I have read and agree to the Privacy Policy'
+    continue_btn = registration_page.check_visibility_of_element(registration_page.CONTINUE_BTN)
+    assert continue_btn.text == 'Continue'
+    url_before = browser.current_url
+    continue_btn.click()
+    error_first_name = registration_page.check_visibility_of_element(registration_page.ERROR_FIRST_NAME)
+    assert error_first_name.text == 'First Name must be between 1 and 32 characters!'
+    error_last_name = registration_page.check_visibility_of_element(registration_page.ERROR_LAST_NAME)
+    assert error_last_name.text == 'Last Name must be between 1 and 32 characters!'
+    error_email = registration_page.check_visibility_of_element(registration_page.ERROR_EMAIL)
+    assert error_email.text == 'E-Mail Address does not appear to be valid!'
+    error_password = registration_page.check_visibility_of_element(registration_page.ERROR_PASSWORD)
+    assert error_password.text == 'Password must be between 4 and 20 characters!'
+    url_after = browser.current_url
+    assert url_after == url_before
+
+
+
+
+
+
+

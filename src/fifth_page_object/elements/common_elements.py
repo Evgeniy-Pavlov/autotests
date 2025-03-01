@@ -19,6 +19,8 @@ class Common_elements(Base_class_page):
     LOGO_URL = (By.CSS_SELECTOR, 'div#logo > a')
     LOGIN_URL = (By.CSS_SELECTOR,
                  '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(2) > a')
+    REGISTRATION_URL = (By.CSS_SELECTOR,
+                  '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(1) > a')
     MY_ACCOUNT_URL = (By.CSS_SELECTOR,
                       '#top > div > div.nav.float-end > ul > li:nth-child(2) > div > ul > li:nth-child(1) > a')
     ORDER_HISTORY = (By.CSS_SELECTOR,
