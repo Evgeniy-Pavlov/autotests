@@ -229,10 +229,3 @@ def test_fields_of_registration_page(base_url, browser):
     assert error_password.text == 'Password must be between 4 and 20 characters!'
     url_after = browser.current_url
     assert url_after == url_before
-
-
-
-
-
-
-

@@ -12,10 +12,14 @@ from helpers import read_conn_params, get_token_admin, generante_random_string, 
 
 def pytest_addoption(parser):
     parser.addoption('--url', action='store', default='localhost:8081')
+    parser.addoption('--remote', action='store_true',
+                     help='It\'s a choice between execute tests in selenoid and local browsers.')
+    parser.addoption('--executor', action='store', default='localhost', help='IP address of remote executor.')
     parser.addoption('--maximized', action='store_true', help='This option\
      allows you to open the browser in full screen.')
     parser.addoption('--headless', action='store_true', help='This is headless mode for the window of browser.')
     parser.addoption('--browser', action='store', default='chrome', choices=['chrome', 'firefox'])
+    parser.addoption('--chrome_version', action='store', default='95.0')
     parser.addoption('--conn_params', action='store', default='conn_params.json', help='This is path db connection\
     parameters')
     parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR"])
@@ -131,6 +135,8 @@ def browser(request):
     headless = request.config.getoption('--headless')
     maximized = request.config.getoption('--maximized')
     log_level = request.config.getoption('--log_level')
+    remote = request.config.getoption('--remote')
+    executor = request.config.getoption('--executor')
     name_node = node_name(request)
     logger = logging.getLogger(name_node)
     file_handler = logging.FileHandler(f'logs/{name_node}.log')
@@ -142,15 +148,30 @@ def browser(request):
     options.add_argument("--ignore-certificate-errors")
     if headless:
         options.add_argument('--headless=new')
-    if browser_arg == 'chrome':
-        driver = webdriver.Chrome(options=options)
-        options.set_capability('goog:loggingPrefs', {
-            'browser': 'ALL',
-            'performance': 'ALL',
-            'driver': 'ALL'
-        })
-    elif browser_arg == 'firefox':
-        driver = webdriver.Firefox(options=options)
+    if not remote:
+        if browser_arg == 'chrome':
+            driver = webdriver.Chrome(options=options)
+            options.set_capability('goog:loggingPrefs', {
+                'browser': 'ALL',
+                'performance': 'ALL',
+                'driver': 'ALL'
+            })
+        elif browser_arg == 'firefox':
+            driver = webdriver.Firefox(options=options)
+    else:
+        if browser_arg == 'chrome' and request.config.getoption('--chrome_version'):
+            version = request.config.getoption('--chrome_version')
+        capabilities = {
+            "browserName": browser_arg,
+            "browserVersion": version,
+            "selenoid:options": {
+                "enableVNC": True,
+                "enableVideo": False
+            }
+        }
+        for k, v in capabilities.items():
+            options.set_capability(k, v)
+        driver = webdriver.Remote(command_executor=f"http://{executor}:4444/wd/hub", options=options)
     if maximized:
         driver.maximize_window()
     driver.implicitly_wait(1)
