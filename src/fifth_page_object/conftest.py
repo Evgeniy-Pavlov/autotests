@@ -19,7 +19,7 @@ def pytest_addoption(parser):
      allows you to open the browser in full screen.')
     parser.addoption('--headless', action='store_true', help='This is headless mode for the window of browser.')
     parser.addoption('--browser', action='store', default='chrome', choices=['chrome', 'firefox'])
-    parser.addoption('--chrome_version', action='store', default='95.0')
+    parser.addoption('--chrome_version', action='store', default='128.0')
     parser.addoption('--conn_params', action='store', default='conn_params.json', help='This is path db connection\
     parameters')
     parser.addoption('--currencies', action='append', default=["GBP", "USD", "EUR"])
