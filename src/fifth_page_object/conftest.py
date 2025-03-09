@@ -129,6 +129,34 @@ def create_random_user(request):
     return email, password
 
 
+@pytest.fixture(scope='function')
+def create_valid_data_for_registration(request):
+    conn_params = read_conn_params(request.config.getoption('--conn_params'))
+    connection = mariadb.connect(**conn_params)
+    firstname = generante_random_string()
+    lastname = generante_random_string()
+    email = f'{generante_random_string()}@test.com'
+    password, _, _ = generate_random_password()
+    cursor = connection.cursor()
+
+    def final():
+        query_select = f'select customer_id from oc_customer where\
+         firstname = "{firstname}" and lastname = "{lastname}" and email = "{email}"'
+        cursor.execute(query_select)
+        try:
+            user_id = str(cursor.fetchall()[0][0])
+            query_delete = f'delete from oc_customer where customer_id = {user_id}'
+            cursor.execute(query_delete)
+            connection.commit()
+        except IndexError:
+            pass
+        cursor.close()
+        connection.close()
+
+    request.addfinalizer(final)
+    return {'firstname': firstname, 'lastname': lastname, 'email': email, 'password': password}
+
+
 @pytest.fixture
 def browser(request):
     browser_arg = request.config.getoption('--browser')
@@ -137,9 +165,9 @@ def browser(request):
     log_level = request.config.getoption('--log_level')
     remote = request.config.getoption('--remote')
     executor = request.config.getoption('--executor')
-    name_node = node_name(request)
-    logger = logging.getLogger(name_node)
-    file_handler = logging.FileHandler(f'logs/{name_node}.log')
+    test_name = node_name(request)
+    logger = logging.getLogger(test_name)
+    file_handler = logging.FileHandler(f'logs/{test_name}.log')
     file_handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
     logger.addHandler(file_handler)
     logger.setLevel(level=log_level)
@@ -166,7 +194,9 @@ def browser(request):
             "browserVersion": version,
             "selenoid:options": {
                 "enableVNC": True,
-                "enableVideo": False
+                "enableVideo": True,
+                "enableLog": True,
+                "name": test_name
             }
         }
         for k, v in capabilities.items():
@@ -177,12 +207,12 @@ def browser(request):
     driver.implicitly_wait(1)
     driver.log_level = log_level
     driver.logger = logger
-    driver.name_of_test = name_node
+    driver.name_of_test = test_name
     logger.info(
         f'Test {driver.name_of_test} started at {datetime.datetime.now()}. Browser options: {options}')
 
     def final():
-        log_file = f'logs/browser_logs_{name_node}.log'
+        log_file = f'logs/browser_logs_{test_name}.log'
         browser_logs = driver.get_log('browser')
         with open(log_file, 'w') as f:
             f.write(str(browser_logs))

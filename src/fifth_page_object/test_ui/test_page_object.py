@@ -4,6 +4,7 @@ from src.fifth_page_object.elements.home_page import Home_page, Product_card
 from src.fifth_page_object.elements.login_form import Login_form
 from src.fifth_page_object.elements.personal_page import Personal_page
 from src.fifth_page_object.elements.registration import Registration_page
+from src.fifth_page_object.elements.alerts import Registration_page_alerts
 
 
 def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths, get_phone):
@@ -229,3 +230,16 @@ def test_fields_of_registration_page(base_url, browser):
     assert error_password.text == 'Password must be between 4 and 20 characters!'
     url_after = browser.current_url
     assert url_after == url_before
+
+
+def test_registration_with_valid_data(base_url, browser, create_valid_data_for_registration):
+    registration = Registration_page(browser, base_url)
+    registration.open_page()
+    registration.check_visibility_of_element(registration.FIRST_NAME_INPUT, 3)
+    registration.input_in_field(registration.FIRST_NAME_INPUT, create_valid_data_for_registration['firstname'])
+    registration.input_in_field(registration.LAST_NAME_INPUT, create_valid_data_for_registration['lastname'])
+    registration.input_in_field(registration.EMAIL_INPUT, create_valid_data_for_registration['email'])
+    registration.input_in_field(registration.PASSWORD_INPUT, create_valid_data_for_registration['password'])
+    registration.click_elem(registration.CONTINUE_BTN)
+    registration.click_elem(registration.POLICY_SWITCH)
+    registration.click_elem(registration.CONTINUE_BTN)

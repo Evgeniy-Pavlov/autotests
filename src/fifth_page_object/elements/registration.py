@@ -28,4 +28,4 @@ class Registration_page(Base_class_page):
 
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)
-        self.path = 'en-gb?route=account/register'
+        self.path = '/en-gb?route=account/register'
