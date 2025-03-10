@@ -6,4 +6,4 @@ class Home_page_alerts(Base_class_page):
     ALERT_BUTTON_CLOSE = (By.CSS_SELECTOR, '#alert > div > button.btn-close')
 
 class Registration_page_alerts(Base_class_page):
-    ALERT_MUST_AGREE_PRIVACY_POLICY = (By.CSS_SELECTOR, '#alert > dir.alert-danger')
+    ALERT_MUST_AGREE_PRIVACY_POLICY = (By.CSS_SELECTOR, '#alert > dirv')

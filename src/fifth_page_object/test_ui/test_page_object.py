@@ -235,11 +235,14 @@ def test_fields_of_registration_page(base_url, browser):
 def test_registration_with_valid_data(base_url, browser, create_valid_data_for_registration):
     registration = Registration_page(browser, base_url)
     registration.open_page()
+    alerts = Registration_page_alerts(browser, base_url)
     registration.check_visibility_of_element(registration.FIRST_NAME_INPUT, 3)
     registration.input_in_field(registration.FIRST_NAME_INPUT, create_valid_data_for_registration['firstname'])
     registration.input_in_field(registration.LAST_NAME_INPUT, create_valid_data_for_registration['lastname'])
     registration.input_in_field(registration.EMAIL_INPUT, create_valid_data_for_registration['email'])
     registration.input_in_field(registration.PASSWORD_INPUT, create_valid_data_for_registration['password'])
     registration.click_elem(registration.CONTINUE_BTN)
+    alert = alerts.check_visibility_of_element(alerts.ALERT_MUST_AGREE_PRIVACY_POLICY)
+    assert alert.text == 'Warning: You must agree to the Privacy Policy!'
     registration.click_elem(registration.POLICY_SWITCH)
     registration.click_elem(registration.CONTINUE_BTN)
