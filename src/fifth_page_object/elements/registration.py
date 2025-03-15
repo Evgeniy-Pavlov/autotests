@@ -24,8 +24,6 @@ class Registration_page(Base_class_page):
     POLICY_SWITCH = (By.CSS_SELECTOR, '#form-register > div > div > input.form-check-input')
     CONTINUE_BTN = (By.CSS_SELECTOR, '#form-register > div > button')
 
-
-
     def __init__(self, browser, base_url):
         super().__init__(browser, base_url)
         self.path = '/en-gb?route=account/register'

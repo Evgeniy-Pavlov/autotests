@@ -1,4 +1,5 @@
 import random
+import allure
 from src.fifth_page_object.elements.common_elements import Common_elements
 from src.fifth_page_object.elements.home_page import Home_page, Product_card
 from src.fifth_page_object.elements.login_form import Login_form
@@ -7,6 +8,7 @@ from src.fifth_page_object.elements.registration import Registration_page
 from src.fifth_page_object.elements.alerts import Registration_page_alerts
 
 
+@allure.title('Тест основных элементов разных страниц')
 def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths, get_phone):
     cmn_elements = Common_elements(browser, base_url)
     cmn_elements.change_path(paths)
@@ -47,6 +49,7 @@ def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths
     assert cmn_elements.browser.current_url != f'{base_url}{paths}'
 
 
+@allure.title('Тест изменения валют на основной странице')
 def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
     cmn_elements = Common_elements(browser, base_url)
     cur_name, cur_symb = curns
@@ -64,6 +67,7 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
         assert cur_symb in price_tax.text
 
 
+@allure.title('Тест добавления товара в корзину')
 def test_product_add_to_cart(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
@@ -93,6 +97,7 @@ def test_product_add_to_cart(base_url, browser):
     assert first_item['price'] == product_info['price_new']
 
 
+@allure.title('Тест авторизации пользователя')
 def test_login_user(base_url, browser, create_random_user):
     cmn_elem = Common_elements(browser, base_url)
     cmn_elem.open_page()
@@ -130,6 +135,7 @@ def test_login_user(base_url, browser, create_random_user):
     cmn_elem.click_elem(cmn_elem.LOGOUT_URL)
 
 
+@allure.title('Тест добавления товара в избранное без авторизации')
 def test_add_to_wishlist_without_login(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
@@ -143,6 +149,7 @@ def test_add_to_wishlist_without_login(base_url, browser):
     assert wishlist.text == 'Wish List (0)'
 
 
+@allure.title('Тест изменения товаров в карусели товаров')
 def test_change_slide_in_carousel(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
@@ -153,6 +160,7 @@ def test_change_slide_in_carousel(base_url, browser):
     home_page.wait_invisibility_element(home_page.FIRST_CAROUSEL_ITEM)
 
 
+@allure.title('Тест изменения слайдов карусели партнеров')
 def test_change_slide_in_carousel_banner(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
@@ -169,6 +177,7 @@ def test_change_slide_in_carousel_banner(base_url, browser):
     home_page.wait_invisibility_element(home_page.SECOND_BANNER_ITEM)
 
 
+@allure.title('Тест полей страницы авторизации и наличия предупреждений при отсутствии заполнения полей')
 def test_fields_of_registration_page(base_url, browser):
     cmn_elem = Common_elements(browser, base_url)
     cmn_elem.open_page()
@@ -232,6 +241,7 @@ def test_fields_of_registration_page(base_url, browser):
     assert url_after == url_before
 
 
+#@allure.title('Регистрация пользователя с валидными данными')
 def test_registration_with_valid_data(base_url, browser, create_valid_data_for_registration):
     registration = Registration_page(browser, base_url)
     registration.open_page()

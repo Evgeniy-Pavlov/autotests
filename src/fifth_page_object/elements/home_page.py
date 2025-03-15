@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver.common.by import By
 from src.fifth_page_object.elements.base_class import Base_class_page
 
@@ -25,6 +26,7 @@ class Home_page(Base_class_page):
         super().__init__(browser, base_url)
         self.path = '/home'
 
+    @allure.step('Получение информации о продукте')
     def get_info_about_product_in_cart(self):
         result = []
         list_items = self.check_visibility_some_elements(self.CART_ITEM)
@@ -52,6 +54,7 @@ class Product_card(Base_class_page):
         super().__init__(browser, base_url)
         self.path = '/home'
 
+    @allure.step('Добавляем в козрзину товар на странице {number}')
     def add_to_cart_nth_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
         rand_product = lst_products[number]
@@ -60,6 +63,7 @@ class Product_card(Base_class_page):
         self.actions.move_to_element(add_button).perform()
         add_button.click()
 
+    @allure.step('Добавляем товар номер {number} в избранное')
     def add_to_wishlist_nth_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
         rand_product = lst_products[number]
@@ -68,6 +72,7 @@ class Product_card(Base_class_page):
         self.actions.move_to_element(add_wishlist).perform()
         add_wishlist.click()
 
+    @allure.step('Получаем информацию о товаре номер {number}')
     def get_info_about_product(self, number):
         lst_products = self.check_visibility_some_elements(self.PRODUCT_CARD)
         product_name = lst_products[number].find_element(*self.PRODUCT_NAME).text
