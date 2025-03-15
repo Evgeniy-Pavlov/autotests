@@ -15,38 +15,55 @@ def test_common_elem_on_different_pages(base_url, browser, set_currencies, paths
     cmn_elements.open_page()
     cmn_elements.currencies_dropdown_click()
     currencies = cmn_elements.check_visibility_some_elements(cmn_elements.CURRENCIES)
-    assert len(currencies) == len(set_currencies)
+    with allure.step(f'Проверяем {len(currencies)} и {len(set_currencies)}'):
+        assert len(currencies) == len(set_currencies)
     inline_items = cmn_elements.check_visibility_some_elements(cmn_elements.INLINE_ITEMS)
-    assert len(inline_items) == 5
+    with allure.step(f'Проверяем {len(inline_items)} и 5'):
+        assert len(inline_items) == 5
     cmn_elements.my_account_click()
     register_login_items = cmn_elements.check_visibility_some_elements(cmn_elements.ITEMS_LOGIN_REGISTER)
-    assert len(register_login_items) == 2
+    with allure.step(f'Сравниваем  {len(register_login_items)} и 2'):
+        assert len(register_login_items) == 2
     register, login = register_login_items
-    assert register.get_attribute('href') == f'{base_url}/en-gb?route=account/register'
-    assert login.get_attribute('href') == f'{base_url}/en-gb?route=account/login'
+    with allure.step(f' Сравниваем {register.get_attribute("href")} и f"{base_url}/en-gb?route=account/register"'):
+        assert register.get_attribute('href') == f'{base_url}/en-gb?route=account/register'
+    with allure.step(f'Сравниваем {login.get_attribute("href")}'):
+        assert login.get_attribute('href') == f'{base_url}/en-gb?route=account/login'
     cmn_elements.my_account_click()
     wishlist = cmn_elements.check_visibility_of_element(cmn_elements.WISHLIST_URL)
-    assert wishlist.get_attribute('href') == f'{base_url}/en-gb?route=account/wishlist'
-    assert wishlist.get_attribute('title') == 'Wish List (0)'
+    with allure.step(f'wishlist.get_attribute("href") и {base_url}/en-gb?route=account/wishlist'):
+        assert wishlist.get_attribute('href') == f'{base_url}/en-gb?route=account/wishlist'
+    with allure.step(f'Сравниваем {wishlist.get_attribute("title")} с Wish List (0)'):
+        assert wishlist.get_attribute('title') == 'Wish List (0)'
     phone_elem = cmn_elements.check_visibility_of_element(cmn_elements.PHONE_NUMBER)
-    assert phone_elem.text == get_phone
-    assert cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART) == inline_items[3]
+    with allure.step(f'Сравниваем {phone_elem.text} с {get_phone}'):
+        assert phone_elem.text == get_phone
+    with allure.step(f'Сравниваем {cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART)} с {inline_items[3]}'):
+        assert cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART) == inline_items[3]
     shopping_cart_url = cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART_URL)
     shopping_cart_text = cmn_elements.check_visibility_of_element(cmn_elements.SHOPPING_CART_TEXT)
-    assert shopping_cart_url.get_attribute('href') == f'{base_url}/en-gb?route=checkout/cart'
-    assert shopping_cart_text.text == 'Shopping Cart'
+    with allure.step(f'Сравниваем {shopping_cart_url.get_attribute("href")} и {base_url}/en-gb?route=checkout/cart'):
+        assert shopping_cart_url.get_attribute('href') == f'{base_url}/en-gb?route=checkout/cart'
+    with allure.step(f'Сравниваем {shopping_cart_text.text} и Shopping Cart'):
+        assert shopping_cart_text.text == 'Shopping Cart'
     checkout_url = cmn_elements.check_visibility_of_element(cmn_elements.CHECKOUT_URL)
     checkout_text = cmn_elements.check_visibility_of_element(cmn_elements.CHECKOUT_TEXT)
-    assert checkout_url.get_attribute('href') == f'{base_url}/en-gb?route=checkout/checkout'
-    assert checkout_text.text == 'Checkout'
-    assert cmn_elements.check_visibility_of_element(cmn_elements.LOGO)
+    with allure.step(f'Сравниваем {checkout_url.get_attribute("href")} и {base_url}/en-gb?route=checkout/checkout'):
+        assert checkout_url.get_attribute('href') == f'{base_url}/en-gb?route=checkout/checkout'
+    with allure.step(f'{checkout_text.text} и Checkout'):
+        assert checkout_text.text == 'Checkout'
+    with allure.step(f'Проверка видимости {cmn_elements.check_visibility_of_element(cmn_elements.LOGO)}'):
+        assert cmn_elements.check_visibility_of_element(cmn_elements.LOGO)
     search_field = cmn_elements.check_visibility_of_element(cmn_elements.SEARCH_FIELD)
-    assert search_field.get_attribute('type') == 'text'
+    with allure.step(f'Сравниваем {search_field.get_attribute("type")} и text'):
+        assert search_field.get_attribute('type') == 'text'
     search_button = cmn_elements.check_visibility_of_element(cmn_elements.SEARCH_BTN)
-    assert search_button.get_attribute('type') == 'button'
+    with allure.step(f'Сравниваем {search_button.get_attribute("type")} и button'):
+        assert search_button.get_attribute('type') == 'button'
     cmn_elements.input_in_search_field('This is test input')
     cmn_elements.click_elem(cmn_elements.SEARCH_BTN)
-    assert cmn_elements.browser.current_url != f'{base_url}{paths}'
+    with allure.step(f'Сравниваем что {cmn_elements.browser.current_url} не равен {base_url}{paths}'):
+        assert cmn_elements.browser.current_url != f'{base_url}{paths}'
 
 
 @allure.title('Тест изменения валют на основной странице')
@@ -61,10 +78,12 @@ def test_change_currency_in_home_page(base_url, browser, set_currencies, curns):
     products = Product_card(browser, base_url)
     lst_prices_new = products.check_visibility_some_elements(products.PRICE_NEW)
     for new_price in lst_prices_new:
-        assert cur_symb in new_price.text
+        with allure.step(f'Проверяем вхождение {cur_symb} в {new_price.text}'):
+            assert cur_symb in new_price.text
     lst_prices_tax = products.check_visibility_some_elements(products.PRICE_TAX)
     for price_tax in lst_prices_tax:
-        assert cur_symb in price_tax.text
+        with allure.step(f'Вхождение {cur_symb} в {price_tax.text}'):
+            assert cur_symb in price_tax.text
 
 
 @allure.title('Тест добавления товара в корзину')
@@ -73,15 +92,19 @@ def test_product_add_to_cart(base_url, browser):
     home_page.open_page()
     home_page.check_visibility_of_element(home_page.LIST_PRODUCTS, 5)
     product_items_pick = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK)
-    assert product_items_pick.text == '0 item(s) - $0.00'
+    with allure.step(f'Сравниваем {product_items_pick.text} и 0 item(s) - $0.00'):
+        assert product_items_pick.text == '0 item(s) - $0.00'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
     lst_add_to_cart = home_page.check_visibility_some_elements(home_page.LIST_PRDCT_EMPTY_ITEM)
-    assert len(lst_add_to_cart) == 1
-    assert lst_add_to_cart[0].text == 'Your shopping cart is empty!'
+    with allure.step(f'{len(lst_add_to_cart)} и 1'):
+        assert len(lst_add_to_cart) == 1
+    with allure.step(f'Сравниваем {lst_add_to_cart[0].text} и Your shopping cart is empty!'):
+        assert lst_add_to_cart[0].text == 'Your shopping cart is empty!'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
     products = Product_card(browser, base_url)
     lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD)
-    assert len(lst_products) == 4
+    with allure.step(f'{len(lst_products)} и 4'):
+        assert len(lst_products) == 4
     product_info = products.get_info_about_product(0)
     price_new = product_info.get("price_new")
     products.add_to_cart_nth_product(0)
