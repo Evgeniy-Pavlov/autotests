@@ -111,13 +111,17 @@ def test_product_add_to_cart(base_url, browser):
     browser.refresh()
     product_items_pick_new = home_page.check_visibility_of_element(home_page.PRODUCT_ITEMS_PICK, 5)
     home_page.actions.move_to_element(product_items_pick_new).perform()
-    assert product_items_pick_new.text == f'1 item(s) - {price_new}'
+    with allure.step(f'{product_items_pick_new.text}== 1 item(s) - {price_new}'):
+        assert product_items_pick_new.text == f'1 item(s) - {price_new}'
     home_page.click_elem(home_page.PRODUCT_ITEMS_PICK)
     product_list = home_page.get_info_about_product_in_cart()
-    assert len(product_list) == 1
+    with allure.step(f'Сравниваем {len(product_list)} и 1'):
+        assert len(product_list) == 1
     first_item = product_list[0]
-    assert first_item['name'] == product_info['product_name']
-    assert first_item['price'] == product_info['price_new']
+    with allure.step(f'Сравниваем {first_item["name"]} и {product_info["product_name"]}'):
+        assert first_item['name'] == product_info['product_name']
+    with allure.step(f'Сравниваем {first_item["price"]} и {product_info["price_new"]}'):
+        assert first_item['price'] == product_info['price_new']
 
 
 @allure.title('Тест авторизации пользователя')
@@ -143,18 +147,24 @@ def test_login_user(base_url, browser, create_random_user):
     login_page.input_in_field(login_page.PASSWORD_INPUT, password)
     login_page.click_elem(login_page.LOGIN_BUTTON)
     personal_page.check_visibility_of_element(personal_page.MY_ACCOUNT_HEADER)
-    assert 'account/account&customer_token' in login_page.browser.current_url
+    with allure.step(f'Сравниваем account/account&customer_token и {login_page.browser.current_url}'):
+        assert 'account/account&customer_token' in login_page.browser.current_url
     cmn_elem.my_account_click()
     my_account_url = cmn_elem.check_visibility_of_element(cmn_elem.MY_ACCOUNT_URL)
-    assert my_account_url.text == 'My Account'
+    with allure.step(f'Сравниваем {my_account_url.text} и My Account'):
+        assert my_account_url.text == 'My Account'
     order_history = cmn_elem.check_visibility_of_element(cmn_elem.ORDER_HISTORY)
-    assert order_history.text == 'Order History'
+    with allure.step(f'Сравниваем {order_history.text} и Order History'):
+        assert order_history.text == 'Order History'
     transactions = cmn_elem.check_visibility_of_element(cmn_elem.TRANSACTIONS)
-    assert transactions.text == 'Transactions'
+    with allure.step(f'Сравниваем {transactions.text} и Transactions'):
+        assert transactions.text == 'Transactions'
     downloads = cmn_elem.check_visibility_of_element(cmn_elem.MY_ACCOUNT_DOWNLOADS)
-    assert downloads.text == 'Downloads'
+    with allure.step(f'{downloads.text} и Downloads'):
+        assert downloads.text == 'Downloads'
     logout = cmn_elem.check_visibility_of_element(cmn_elem.LOGOUT_URL)
-    assert logout.text == 'Logout'
+    with allure.step(f'Сравниваем {logout.text} и Logout'):
+        assert logout.text == 'Logout'
     cmn_elem.click_elem(cmn_elem.LOGOUT_URL)
 
 
@@ -164,12 +174,14 @@ def test_add_to_wishlist_without_login(base_url, browser):
     home_page.open_page()
     products = Product_card(browser, base_url)
     lst_products = products.check_visibility_some_elements(products.PRODUCT_CARD, 5)
-    assert len(lst_products) == 4
+    with allure.step(f'Сравниваем {len(lst_products)} и 4'):
+        assert len(lst_products) == 4
     rand_num = random.randint(1, len(lst_products) - 1)
     products.add_to_wishlist_nth_product(rand_num)
     cmn_elem = Common_elements(browser, base_url)
     wishlist = cmn_elem.check_visibility_of_element(cmn_elem.WISHLIST_TEXT, timeout=5)
-    assert wishlist.text == 'Wish List (0)'
+    with allure.step(f'Сравниваем {wishlist.text} и Wish List (0)'):
+        assert wishlist.text == 'Wish List (0)'
 
 
 @allure.title('Тест изменения товаров в карусели товаров')
@@ -177,7 +189,8 @@ def test_change_slide_in_carousel(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
     carousel_items = home_page.check_presence_some_elements(home_page.CAROUSEL_ITEM, 5)
-    assert len(carousel_items) == 2
+    with allure.step(f'Сравниваем {len(carousel_items)} и 2'):
+        assert len(carousel_items) == 2
     home_page.check_visibility_of_element(home_page.FIRST_CAROUSEL_ITEM)
     home_page.check_visibility_of_element(home_page.SECOND_CAROUSEL_ITEM, 6)
     home_page.wait_invisibility_element(home_page.FIRST_CAROUSEL_ITEM)
@@ -188,7 +201,8 @@ def test_change_slide_in_carousel_banner(base_url, browser):
     home_page = Home_page(browser, base_url)
     home_page.open_page()
     carousel_items = home_page.check_presence_some_elements(home_page.CAROUSEL_BANNER_ITEM, 5)
-    assert len(carousel_items) == 3
+    with allure.step(f'Сравниваем {len(carousel_items)} и 3'):
+        assert len(carousel_items) == 3
     home_page.check_visibility_of_element(home_page.FIRST_BANNER_ITEM)
     home_page.wait_invisibility_element(home_page.SECOND_BANNER_ITEM)
     home_page.wait_invisibility_element(home_page.THIRD_BANNER_ITEM)
@@ -210,61 +224,89 @@ def test_fields_of_registration_page(base_url, browser):
     registration_page = Registration_page(browser, base_url)
     header_of_page = registration_page.check_visibility_of_element(registration_page.HEADER)
     personal_details = registration_page.check_visibility_of_element(registration_page.PERSONAL_DETAILS_LEGEND)
-    assert personal_details.text == 'Your Personal Details'
-    assert header_of_page.text == 'Register Account'
+    with allure.step(f'Сравниваем {personal_details} и Your Personal Details'):
+        assert personal_details.text == 'Your Personal Details'
+    with allure.step(f'Сравниваем {header_of_page.text} и Register Account'):
+        assert header_of_page.text == 'Register Account'
     first_name_label = registration_page.check_visibility_of_element(registration_page.FIRST_NAME_LABEL)
-    assert first_name_label.text == 'First Name'
+    with allure.step(f'Сравниваем {first_name_label.text} и First Name'):
+        assert first_name_label.text == 'First Name'
     first_name_input = registration_page.check_visibility_of_element(registration_page.FIRST_NAME_INPUT)
-    assert first_name_input.get_attribute('type') == 'text'
-    assert first_name_input.get_attribute('value') == ''
-    assert first_name_input.get_attribute('placeholder') == 'First Name'
+    with allure.step(f'Сравниваем {first_name_input.get_attribute("type")} и text'):
+        assert first_name_input.get_attribute('type') == 'text'
+    with allure.step(f'{first_name_input.get_attribute("value")} с пустой строкой'):
+        assert first_name_input.get_attribute('value') == ''
+    with allure.step(f'{first_name_input.get_attribute("placeholder")} и First Name'):
+        assert first_name_input.get_attribute('placeholder') == 'First Name'
     registration_page.wait_invisibility_element(registration_page.ERROR_FIRST_NAME)
     last_name_label = registration_page.check_visibility_of_element(registration_page.LAST_NAME_LABEL)
-    assert last_name_label.text == 'Last Name'
+    with allure.step(f'Сравниваем {last_name_label.text} и Last Name'):
+        assert last_name_label.text == 'Last Name'
     last_name_input = registration_page.check_visibility_of_element(registration_page.LAST_NAME_INPUT)
-    assert last_name_input.get_attribute('type') == 'text'
-    assert last_name_input.get_attribute('value') == ''
-    assert last_name_input.get_attribute('placeholder') == 'Last Name'
+    with allure.step(f'{last_name_input.get_attribute("type")} и text'):
+        assert last_name_input.get_attribute('type') == 'text'
+    with allure.step(f'Сравниваем {last_name_input.get_attribute("value")} с пустой строкой'):
+        assert last_name_input.get_attribute('value') == ''
+    with allure.step(f'Сравниваем {last_name_input.get_attribute("placeholder")} и Last Name'):
+        assert last_name_input.get_attribute('placeholder') == 'Last Name'
     registration_page.wait_invisibility_element(registration_page.ERROR_LAST_NAME)
     email_label = registration_page.check_visibility_of_element(registration_page.EMAIL_LABEL)
-    assert email_label.text == 'E-Mail'
+    with allure.step(f'Сравниваем {email_label.text} и E-Mail'):
+        assert email_label.text == 'E-Mail'
     email_input = registration_page.check_visibility_of_element(registration_page.EMAIL_INPUT)
-    assert email_input.get_attribute('type') == 'email'
-    assert email_input.get_attribute('value') == ''
-    assert email_input.get_attribute('placeholder') == 'E-Mail'
+    with allure.step(f'{email_input.get_attribute("type")} и email'):
+        assert email_input.get_attribute('type') == 'email'
+    with allure.step(f'{email_input.get_attribute("value")} и E-Mail'):
+        assert email_input.get_attribute('value') == ''
+    with allure.step(f'{email_input.get_attribute("placeholder")} и E-Mail'):
+        assert email_input.get_attribute('placeholder') == 'E-Mail'
     registration_page.wait_invisibility_element(registration_page.ERROR_EMAIL)
     password_details = registration_page.check_visibility_of_element(registration_page.PASSWORD_LEGEND)
-    assert password_details.text == 'Your Password'
+    with allure.step(f'Сравниваем {password_details.text} и Your Password'):
+        assert password_details.text == 'Your Password'
     password_input = registration_page.check_visibility_of_element(registration_page.PASSWORD_INPUT)
-    assert password_input.get_attribute('type') == 'password'
-    assert password_input.get_attribute('value') == ''
-    assert password_input.get_attribute('placeholder') == 'Password'
+    with allure.step(f'Сравниваем {password_input.get_attribute("type")} и password'):
+        assert password_input.get_attribute('type') == 'password'
+    with allure.step(f'Сравниваем {password_input.get_attribute("value")} с пустой строкой'):
+        assert password_input.get_attribute('value') == ''
+    with allure.step(f'Сравниваем {password_input.get_attribute("placeholder")} и Password'):
+        assert password_input.get_attribute('placeholder') == 'Password'
     registration_page.wait_invisibility_element(registration_page.ERROR_PASSWORD)
     newsletter = registration_page.check_visibility_of_element(registration_page.NEWLETTER_LEGEND)
-    assert newsletter.text == 'Newsletter'
+    with allure.step(f'Сравниваем {newsletter.text} и Newsletter'):
+        assert newsletter.text == 'Newsletter'
     subscribe_label = registration_page.check_visibility_of_element(registration_page.SUBSCRIBE_LABEL)
-    assert subscribe_label.text == 'Subscribe'
+    with allure.step(f'Сравниваем {subscribe_label.text} и Subscribe'):
+        assert subscribe_label.text == 'Subscribe'
     subscribe_switch = registration_page.check_visibility_of_element(registration_page.SUBSCRIBE_SWITCH)
-    assert subscribe_switch.get_attribute('type') == 'checkbox'
+    with allure.step(f'Сравниваем {subscribe_switch.get_attribute("type")} и checkbox'):
+        assert subscribe_switch.get_attribute('type') == 'checkbox'
     policy_label = registration_page.check_visibility_of_element(registration_page.POLICY_LABEL)
-    assert policy_label.text == 'I have read and agree to the Privacy Policy'
+    with allure.step(f'Сравниваем {policy_label.text} и I have read and agree to the Privacy Policy'):
+        assert policy_label.text == 'I have read and agree to the Privacy Policy'
     continue_btn = registration_page.check_visibility_of_element(registration_page.CONTINUE_BTN)
-    assert continue_btn.text == 'Continue'
+    with allure.step(f'Сравниваем {continue_btn.text} и Continue'):
+        assert continue_btn.text == 'Continue'
     url_before = browser.current_url
     continue_btn.click()
     error_first_name = registration_page.check_visibility_of_element(registration_page.ERROR_FIRST_NAME)
-    assert error_first_name.text == 'First Name must be between 1 and 32 characters!'
+    with allure.step(f'Сравниваем {error_first_name.text} и First Name must be between 1 and 32 characters!'):
+        assert error_first_name.text == 'First Name must be between 1 and 32 characters!'
     error_last_name = registration_page.check_visibility_of_element(registration_page.ERROR_LAST_NAME)
-    assert error_last_name.text == 'Last Name must be between 1 and 32 characters!'
+    with allure.step(f'Сравниваем {error_last_name.text} и Last Name must be between 1 and 32 characters!'):
+        assert error_last_name.text == 'Last Name must be between 1 and 32 characters!'
     error_email = registration_page.check_visibility_of_element(registration_page.ERROR_EMAIL)
-    assert error_email.text == 'E-Mail Address does not appear to be valid!'
+    with allure.step(f'Сравниваем {error_email.text} и E-Mail Address does not appear to be valid!'):
+        assert error_email.text == 'E-Mail Address does not appear to be valid!'
     error_password = registration_page.check_visibility_of_element(registration_page.ERROR_PASSWORD)
-    assert error_password.text == 'Password must be between 4 and 20 characters!'
+    with allure.step(f'Сравниваем {error_password.text} и Password must be between 4 and 20 characters!'):
+        assert error_password.text == 'Password must be between 4 and 20 characters!'
     url_after = browser.current_url
-    assert url_after == url_before
+    with allure.step(f'Сравниваем {url_after} и {url_before}'):
+        assert url_after == url_before
 
 
-#@allure.title('Регистрация пользователя с валидными данными')
+@allure.title('Регистрация пользователя с валидными данными')
 def test_registration_with_valid_data(base_url, browser, create_valid_data_for_registration):
     registration = Registration_page(browser, base_url)
     registration.open_page()
@@ -276,6 +318,7 @@ def test_registration_with_valid_data(base_url, browser, create_valid_data_for_r
     registration.input_in_field(registration.PASSWORD_INPUT, create_valid_data_for_registration['password'])
     registration.click_elem(registration.CONTINUE_BTN)
     alert = alerts.check_visibility_of_element(alerts.ALERT_MUST_AGREE_PRIVACY_POLICY)
-    assert alert.text == 'Warning: You must agree to the Privacy Policy!'
+    with allure.step(f'Сравниваем {alert.text} и Warning: You must agree to the Privacy Policy!'):
+        assert alert.text == 'Warning: You must agree to the Privacy Policy!'
     registration.click_elem(registration.POLICY_SWITCH)
     registration.click_elem(registration.CONTINUE_BTN)
