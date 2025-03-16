@@ -167,3 +167,4 @@ example.*
 
 allure-results/
 allure-report/
+*.png

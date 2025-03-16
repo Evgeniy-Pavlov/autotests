@@ -22,7 +22,10 @@ class Base_class_page:
             return WebDriverWait(self.browser, timeout).until(EC.presence_of_element_located(elem))
         except (TimeoutException, NoSuchElementException, StaleElementReferenceException) as err:
             self.logger.error(f'The element {elem} not in DOM or the timeout is not enough. Error: {err}')
-            self.browser.save_screenshot(f'logs/{self.browser.session_id}-{datetime.datetime.now()}.png')
+            filename = f'{self.browser.name_of_test}_{self.browser.session_id}.png'
+            allure.attach(body=self.browser.get_screenshot_as_png(),
+                          name=filename,
+                          attachment_type=allure.attachment_type.PNG)
             raise AssertionError(err)
 
     @allure.step('Проверяю наличие нескольких элементов {elem} на странице с таймайтом {timeout}')
@@ -32,7 +35,10 @@ class Base_class_page:
             return WebDriverWait(self.browser, timeout).until(EC.presence_of_all_elements_located(elem))
         except (TimeoutException, NoSuchElementException, StaleElementReferenceException) as err:
             self.logger.error(f'The elements {elem} not in DOM or the timeout is not enough. Error: {err}')
-            self.browser.save_screenshot(f'logs/{self.browser.session_id}-{datetime.datetime.now()}.png')
+            filename = f'{self.browser.name_of_test}_{self.browser.session_id}.png'
+            allure.attach(body=self.browser.get_screenshot_as_png(),
+                          name=filename,
+                          attachment_type=allure.attachment_type.PNG)
             raise AssertionError(err)
 
     @allure.step('Проверяю видимость нескольких элементов на странице {timeout}')
@@ -42,7 +48,10 @@ class Base_class_page:
             return WebDriverWait(self.browser, timeout).until(EC.visibility_of_element_located(elem))
         except (TimeoutException, NoSuchElementException, StaleElementReferenceException) as err:
             self.logger.error(f'The element {elem} is not visible or the timeout is not enough. Error: {err}')
-            self.browser.save_screenshot(f'logs/{self.browser.session_id}-{datetime.datetime.now()}.png')
+            filename = f'{self.browser.name_of_test}_{self.browser.session_id}.png'
+            allure.attach(body=self.browser.get_screenshot_as_png(),
+                          name=filename,
+                          attachment_type=allure.attachment_type.PNG)
             raise AssertionError(err)
 
     @allure.step('Проверка ожидания невидимости элемента {elem} с таймаутом {timeout}')
@@ -52,7 +61,10 @@ class Base_class_page:
             return WebDriverWait(self.browser, timeout).until(EC.invisibility_of_element_located(elem))
         except (TimeoutException, NoSuchElementException, StaleElementReferenceException) as err:
             self.logger.error(f'The element {elem} is visible or the timeout is not enough. Error: {err}')
-            self.browser.save_screenshot(f'logs/{self.browser.session_id}-{datetime.datetime.now()}.png')
+            filename = f'{self.browser.name_of_test}_{self.browser.session_id}.png'
+            allure.attach(body=self.browser.get_screenshot_as_png(),
+                          name=filename,
+                          attachment_type=allure.attachment_type.PNG)
             raise AssertionError(err)
 
     @allure.step('Проверка ожидания невидимости нескольких элементов {elem} с таймаутом {timeout}')
@@ -62,7 +74,10 @@ class Base_class_page:
             return WebDriverWait(self.browser, timeout).until(EC.visibility_of_all_elements_located(elem))
         except (TimeoutException, NoSuchElementException, StaleElementReferenceException) as err:
             self.logger.error(f'The elements {elem} is not visible or the timeout is not enough. Error: {err}')
-            self.browser.save_screenshot(f'logs/{self.browser.session_id}-{datetime.datetime.now()}.png')
+            filename = f'{self.browser.name_of_test}_{self.browser.session_id}.png'
+            allure.attach(body=self.browser.get_screenshot_as_png(),
+                          name=filename,
+                          attachment_type=allure.attachment_type.PNG)
             raise AssertionError(err)
 
     @allure.step('Ожидание заголовка страницы {title} с таймаутом {timeout}')

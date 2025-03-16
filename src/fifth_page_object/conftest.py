@@ -1,12 +1,16 @@
+import json
 import datetime
 import socket
 import pytest
 import logging
+import allure
+import mariadb
+import requests
+import mariadb
+import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as Chrome_Options
 from selenium.webdriver.firefox.options import Options as Firefox_Options
-import mariadb
-import requests
 from helpers import read_conn_params, get_token_admin, generante_random_string, generate_random_password
 
 
@@ -202,6 +206,8 @@ def browser(request):
         for k, v in capabilities.items():
             options.set_capability(k, v)
         driver = webdriver.Remote(command_executor=f"http://{executor}:4444/wd/hub", options=options)
+        allure.attach(body=json.dumps(driver.capabilities),
+                      name=f'browser capabilities {driver.session_id}', attachment_type=allure.attachment_type.JSON)
     if maximized:
         driver.maximize_window()
     driver.implicitly_wait(1)

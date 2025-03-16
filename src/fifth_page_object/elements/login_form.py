@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from src.fifth_page_object.elements.base_class import Base_class_page
 
+
 class Login_form(Base_class_page):
     EMAIL_INPUT = (By.CSS_SELECTOR, '#input-email')
     PASSWORD_INPUT = (By.CSS_SELECTOR, '#input-password')

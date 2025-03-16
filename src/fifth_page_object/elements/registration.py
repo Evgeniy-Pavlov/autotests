@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from src.fifth_page_object.elements.base_class import Base_class_page
 
+
 class Registration_page(Base_class_page):
     HEADER = (By.CSS_SELECTOR, '#content > h1')
     PERSONAL_DETAILS_LEGEND = (By.CSS_SELECTOR, '#account > legend')
